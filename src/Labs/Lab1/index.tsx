@@ -157,11 +157,11 @@ export default function Lab1() {
             <img id="wd-starship"
                 width="400px"
             src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"
-            />
+            alt="" />
             <br />
             Loading a local image:
             <br />
-            <img id="wd-teslabot" src="Desktop/teslabot.jpg" height="200px" />
+            <img id="wd-teslabot" src="Desktop/teslabot.jpg" height="200px" alt=""/>
         </div>
         <div id="wd-forms">
         <h4>Form Elements</h4>
@@ -187,7 +187,7 @@ export default function Lab1() {
         ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit 
         esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non 
             proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
-            <h5 id="wd-buttons">Buttons</h5>
+            <h5 id="wd-buttons"> Buttons</h5>
             <button id="wd-all-good" onClick={() => alert("Life is Good!")} type="button">
             Hello World!
             </button>
