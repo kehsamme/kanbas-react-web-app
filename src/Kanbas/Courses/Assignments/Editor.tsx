@@ -129,10 +129,10 @@ export default function AssignmentEditor() {
                 <td>
                 </td>
                   <td align="right" valign="bottom">
-                  <button id="wd-cancel" onClick={() => alert("Life is Good!")} type="button">
+                  <button id="wd-cancel" onClick={() => alert("Changes Canceled")} type="button">
                   Cancel
                   </button>
-                  <button id="wd-cancel" onClick={() => alert("Life is Good!")} type="button">
+                  <button id="wd-cancel" onClick={() => alert("Changes Saved")} type="button">
                       Save
                   </button>
                   </td>
