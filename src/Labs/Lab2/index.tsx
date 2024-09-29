@@ -11,9 +11,11 @@ import Zindex from "./Zindex";
 import Float from "./Float";
 import Gridlayout from "./Gridlayout";
 import Flex from "./Flex";
+import ReactIconsSampler from "./ReactIcons";
+import BootstrapGrids from "./BootstrapGrids";
 export default function Lab2() {
     return(
-        <div>
+        <div className="container">
             <h2>Lab 2 - Cascading Style Sheets</h2>
             <h3>Styling with the STYLE attributes</h3>
             <p>
@@ -70,12 +72,14 @@ export default function Lab2() {
             < Padding/>
             < Margins />
             <Corners />
-            <Dimensions />
+            < Dimensions />
             <Positions />
             < Zindex />
             < Float />
-            < Gridlayout />
+            < Gridlayout /> <br/>
             <Flex />
+            <ReactIconsSampler />
+            <BootstrapGrids />
             <h3>Exercise 2.1</h3>
             <h3>Exercise 2.2</h3>
             <h3>Exercise 2.3</h3>
