@@ -54,4 +54,6 @@ export default function PeopleTable() {
             <td className="wd-total-activity">14:01:58</td> </tr>
         </tbody>
       </table>
-    </div> );}
+    </div> 
+    );
+}

@@ -23,7 +23,7 @@ export default function Courses() {
                 <Route path="Assignments" element={<Assignments />} />
                 <Route path="Assignments/:aid" element={<AssignmentEditor/>} />
                 <Route path="People" element={<PeopleTable />} />
-                </Routes>
+            </Routes>
         </div>
       </div>
 );}
