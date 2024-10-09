@@ -1,6 +1,7 @@
 export default function AssignmentEditor() {
     return (
       <div id="wd-assignments-editor">
+        <form>
         <div className="col-12 container">
         <label>Assignment Name</label> <br/>
         <div className="mb-3">
@@ -108,8 +109,10 @@ export default function AssignmentEditor() {
               </div>
             </div>
             </div>
+            </div>
               </div>
               </div>
+              </form>
               <br/><br/>
               <div className="row">
                 <div className="col-10 d-flex justify-content-end">
@@ -121,7 +124,6 @@ export default function AssignmentEditor() {
                   </button>
                   </div>
               </div>
-      </div>
       </div>
   );
 }
