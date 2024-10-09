@@ -46,6 +46,8 @@
     border-width: 20px 30px 20px 30px; }
  .wd-border-thin {
     border-width: 4px; }
+   .wd-border-superthin {
+      border-width: 1px; }
  .wd-border-solid {
     border-style: solid; }
  .wd-border-dashed {

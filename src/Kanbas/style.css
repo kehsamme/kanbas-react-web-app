@@ -27,3 +27,12 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
     border-left: 3px solid green !important;
   }
   
+  .padding-editor {
+    border: 1px rgb(87, 92, 87) solid;
+    padding: 30px;
+    margin-bottom: 20px
+  }
+
+  .red-text {
+    color: red
+  }
