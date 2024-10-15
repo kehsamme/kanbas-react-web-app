@@ -65,8 +65,8 @@ export default function Modules() {
             </ul>
           </li>
         </ul> </div>
-         )
-         ;}
+      )
+  ;}
          
 
         {/* <button>Collapse All</button> <button>View Progress</button> 
