@@ -1,0 +1,74 @@
+[
+        { 
+            "_id": "A101", 
+            "title": "Propulsion Assignment", 
+            "availability": "2024-10-01", 
+            "due": "2024-10-15", 
+            "points": "100",
+            "course": "RS101" 
+        },
+        { 
+            "_id": "A102", 
+            "title": "Combustion Analysis", 
+            "availability": "2024-10-05", 
+            "due": "2024-10-20", 
+            "points": "100",
+            "course": "RS101" 
+        },
+        { 
+            "_id": "A103", 
+            "title": "Nozzle Design Project", 
+            "availability": "2024-10-10", 
+            "due": "2024-10-25",
+            "points": "100",
+            "course": "RS101" 
+        },
+        { 
+            "_id": "A201", 
+            "title": "Aerodynamics Quiz", 
+            "availability": "2024-10-02", 
+            "due": "2024-10-16", 
+            "points": "100",
+            "course": "RS102" 
+        },
+        { 
+            "_id": "A202", 
+            "title": "Flow Analysis", 
+            "availability": "2024-10-03", 
+            "due": "2024-10-17", 
+            "points": "100",
+            "course": "RS102" 
+        },
+        { 
+            "_id": "A203", 
+            "title": "Heating Analysis", 
+            "availability": "2024-10-04", 
+            "due": "2024-10-18", 
+            "points": "100",
+            "course": "RS102" 
+        },
+        { 
+            "_id": "A301", 
+            "title": "Structural Design Task", 
+            "availability": "2024-10-05", 
+            "due": "2024-10-22", 
+            "points": "100",
+            "course": "RS103" 
+        },
+        { 
+            "_id": "A302", 
+            "title": "Orbital Calculations", 
+            "availability": "2024-10-07", 
+            "due": "2024-10-24",
+            "points": "100", 
+            "course": "RS103" 
+        },
+        { 
+            "_id": "A303", 
+            "title": "Systems Engineering Exam", 
+            "availability": "2024-10-09", 
+            "due": "2024-10-30", 
+            "points": "100",
+            "course": "RS103" 
+        }
+]

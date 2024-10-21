@@ -1,11 +1,18 @@
+import { useParams } from "react-router";
+import * as db from "../../Database";
 export default function AssignmentEditor() {
+    const { aid } = useParams();
+    const assignments = db.assignments;
     return (
       <div id="wd-assignments-editor">
-        <form>
+        {assignments
+          .filter((assignment: any) => assignment._id === aid)
+          .map((assignment: any) => (
+        <form key={aid}>
         <div className="col-12 container">
         <label>Assignment Name</label> <br/>
         <div className="mb-3">
-        <input className="form-control" id="wd-name" value="A1 - ENV + HTML" /><br /><br />
+        <input className="form-control" id="wd-name" value={assignment.title} /><br /><br />
         <textarea className="form-control" id="wd-description" cols={50} rows={10}>
           The assignment is available online Submit a link to the landing page of your Web application running on Netlify. 
           The landing page should include the following: Your full name and section Links to each of the lab assignments Link 
@@ -17,7 +24,7 @@ export default function AssignmentEditor() {
         <div className="row">
           <div className="col-2">Points</div>
               <div className="col-6">
-                <input id="wd-points" className="form-control" value={100} />
+                <input id="wd-points" className="form-control" value={assignment.points} />
           </div>
           <br /><br />
           <div className="row">
@@ -99,20 +106,20 @@ export default function AssignmentEditor() {
                 <label htmlFor="wd-available-from"> Available from </label> <br/>
                 <input className="form-control" type="date"
                 id="wd-available-from"
-                value="2024-05-06"/>
+                value={assignment.availability}/>
                 </div>
                 <div className="col-6">
                 <label htmlFor="wd-available-until"> Until </label> <br/>
                 <input className="form-control" type="date"
                 id="wd-available-until"
-                value="2024-05-20"/> 
+                value={assignment.due}/> 
               </div>
             </div>
             </div>
             </div>
               </div>
               </div>
-              </form>
+              </form> ))} 
               <br/><br/>
               <div className="row">
                 <div className="col-10 d-flex justify-content-end">
@@ -124,7 +131,7 @@ export default function AssignmentEditor() {
                   </button>
                   </div>
               </div>
-      </div>
+          </div>
   );
 }
   
