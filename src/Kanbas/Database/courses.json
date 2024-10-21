@@ -1,7 +1,7 @@
 [
   {
     "_id": "RS101",
-    "image": "stacked.jpg",
+    "image": "galaxy.jpg",
     "name": "Rocket Propulsion",
     "number": "RS4550",
     "startDate": "2023-01-10",
@@ -12,7 +12,7 @@
   },
   {
     "_id": "RS102",
-    "image": "teslabot.jpg",
+    "image": "spacee-scaled.jpg",
     "name": "Aerodynamics",
     "number": "RS4560",
     "startDate": "2023-01-10",
@@ -23,7 +23,7 @@
   },
   {
     "_id": "RS103",
-    "image": "reactjs.jpg",
+    "image": "cats_wd.jpg",
     "name": "Spacecraft Design",
     "number": "RS4570",
     "startDate": "2023-01-10",
