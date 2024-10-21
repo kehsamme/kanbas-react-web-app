@@ -1,23 +1,23 @@
 import { useParams } from "react-router";
 import * as db from "../../Database";
+import { Link } from "react-router-dom";
 export default function AssignmentEditor() {
     const { aid } = useParams();
     const assignments = db.assignments;
     return (
-      <div id="wd-assignments-editor">
+      <div>
         {assignments
           .filter((assignment: any) => assignment._id === aid)
           .map((assignment: any) => (
+      <div id="wd-assignments-editor">
+        
         <form key={aid}>
         <div className="col-12 container">
         <label>Assignment Name</label> <br/>
         <div className="mb-3">
         <input className="form-control" id="wd-name" value={assignment.title} /><br /><br />
         <textarea className="form-control" id="wd-description" cols={50} rows={10}>
-          The assignment is available online Submit a link to the landing page of your Web application running on Netlify. 
-          The landing page should include the following: Your full name and section Links to each of the lab assignments Link 
-          to the Kanbas application Links to all relevant source code repositories The Kanbas application should include a link 
-          to navigate back to the landing page.
+         {assignment.description}
         </textarea>
         </div>
         <br />
@@ -99,7 +99,7 @@ export default function AssignmentEditor() {
                 <label htmlFor="wd-due-date"> Due </label> <br/>
                 <input className="form-control" type="date"
                 id="wd-due-date"
-                value="2024-05-13"/>
+                value={assignment.due}/>
                 <br />
                 <div className="row">
                   <div className="col-6">
@@ -119,19 +119,20 @@ export default function AssignmentEditor() {
             </div>
               </div>
               </div>
-              </form> ))} 
+              </form>
               <br/><br/>
               <div className="row">
                 <div className="col-10 d-flex justify-content-end">
-                  <button className="btn btn-secondary" id="wd-cancel" onClick={() => alert("Changes Canceled")} type="button">
+                <Link to={`/Kanbas/Courses/${assignment.course}/Assignments`} className="btn btn-secondary" id="wd-cancel">
                   Cancel
-                  </button>
-                  <button className="btn btn-danger" id="wd-save" onClick={() => alert("Changes Saved")} type="button">
-                      Save
-                  </button>
-                  </div>
+                </Link> 
+                <Link to={`/Kanbas/Courses/${assignment.course}/Assignments`} className="btn btn-danger" id="wd-save">
+                  Save
+                </Link>
               </div>
+            </div>
           </div>
+    ))} </div> 
   );
 }
   
