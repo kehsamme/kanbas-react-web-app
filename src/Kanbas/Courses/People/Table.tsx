@@ -20,7 +20,7 @@ export default function PeopleTable() {
             <tr key={user._id}>
               <td className="wd-full-name text-nowrap">
                 <FaUserCircle className="me-2 fs-1 text-secondary" />
-                <span className="wd-first-name">{user.firstName}</span>
+                <span className="wd-first-name">{user.firstName}</span> &nbsp;
                 <span className="wd-last-name">{user.lastName}</span>
               </td>
               <td className="wd-login-id">{user.loginId}</td>
