@@ -33,6 +33,9 @@ import AddPathParameters from "./AddPathParameters";
 
 function Lab3() {
     console.log('Hello World!');
+    const a = {b: 1, c: 2, d: 3}
+    const e = {...a, c: 4}
+    console.log(e.c)
     return (
       <div>
         <h2>Lab 3</h2>
