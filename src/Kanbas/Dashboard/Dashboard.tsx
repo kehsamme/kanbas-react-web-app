@@ -1,43 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as db from "../Database";
-export default function Dashboard(
-    // const [courses, setCourses] = useState<any[]>(db.courses);
-    // const [course, setCourse] = useState<any>({
-    //     _id: "0", name: "New Course", number: "New Number",
-    //     startDate: "2023-09-10", endDate: "2023-12-15",
-    //     image: "/images/reactjs.jpg", description: "New Description"
-    // });
-    // const addNewCourse = () => { const newCourse = { ...course,
-    //             _id: new Date().getTime().toString() };
-    //         setCourses([...courses, { ...course, ...newCourse }]);
-    //         };
-    // const deleteCourse = (courseId: string) => {
-    //     setCourses(courses.filter((course) => course._id !== courseId));
-    //     };
-    // const updateCourse = () => {
-    //     setCourses(
-    //         courses.map((c) => {
-    //         if (c._id === course._id) {
-    //             return course;
-    //         } else {
-    //             return c;
-    //         }
-    //         })
-    //     );
-    // };
-        
-            
-//     const newCourse = { ...course,
-//                         _id: new Date().getTime().toString() };
-//     setCourses([...courses, { ...course, ...newCourse }]);
-//   };
-    { courses, course, setCourse, addNewCourse,
-        deleteCourse, updateCourse }: {
-        courses: any[]; course: any; setCourse: (course: any) => void;
-        addNewCourse: () => void; deleteCourse: (course: any) => void;
-        updateCourse: () => void; })
-    {
+import { useSelector } from "react-redux";
+
+export default function Dashboard({ courses, course, setCourse, addNewCourse,
+    deleteCourse, updateCourse }: {
+    courses: any[]; course: any; setCourse: (course: any) => void;
+    addNewCourse: () => void; deleteCourse: (course: any) => void;
+    updateCourse: () => void; })
+   {
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { enrollments } = db;
+   
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
@@ -60,8 +34,15 @@ export default function Dashboard(
       <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {courses.map((course) => (
-            <div className="wd-dashboard-course col" style={{ width: "300px" }}>
+          {courses
+                .filter((course) =>
+                enrollments.some(
+                    (enrollment) =>
+                    enrollment.user === currentUser._id &&
+                    enrollment.course === course._id
+                    ))
+            .map((course) => (
+            <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden">
                 <Link to={`/Kanbas/Courses/${course._id}/Home`}
                       className="wd-dashboard-course-link text-decoration-none text-dark" >
@@ -96,114 +77,4 @@ export default function Dashboard(
       </div>
     </div>);}
 
-
-
-        {/* <div className="wd-dashboard-course col" style={{ width: "300px" }}>
-            <div className="card rounded-3 overflow-hidden">
-          <Link className="wd-dashboard-course-link text-decoration-none text-dark"
-                to="/Kanbas/Courses/4420/Home">
-            <img src="/images/reactjs.jpg" width="100%" height={160}/>
-            <div className="card-body">
-                <h5 className="wd-dashboard-course-title card-title">
-                    DS4420 Machine Learning 2
-                </h5>
-                <p className="wd-dashboard-course-title card-text">
-                    2024_2 Fall 2024 Semester Full Term
-                </p>
-                <button className="btn btn-primary"> Go </button>
-            </div>
-        </Link>
-        </div>
-        </div>
-        <div className="wd-dashboard-course col" style={{ width: "300px" }}>
-            <div className="card rounded-3 overflow-hidden">
-          <Link className="wd-dashboard-course-link text-decoration-none text-dark"
-                to="/Kanbas/Courses/5591/Home">
-            <img src="/images/reactjs.jpg" width="100%" height={160}/>
-            <div className="card-body">
-                <h5 className="wd-dashboard-course-title card-title">
-                    BIOL5591 Advanced Genomics
-                </h5>
-                <p className="wd-dashboard-course-title card-text">
-                    2024_3 Fall 2024 Semester Full Term
-                </p>
-                <button className="btn btn-primary"> Go </button>
-            </div>
-        </Link>
-        </div>
-        </div>
-        <div className="wd-dashboard-course col" style={{ width: "300px" }}>
-            <div className="card rounded-3 overflow-hidden">
-          <Link className="wd-dashboard-course-link text-decoration-none text-dark"
-                to="/Kanbas/Courses/4202/Home">
-            <img src="/images/reactjs.jpg" width="100%" height={160}/>
-            <div className="card-body">
-                <h5 className="wd-dashboard-course-title card-title">
-                    PHTH4202 Epidemiology
-                </h5>
-                <p className="wd-dashboard-course-title card-text">
-                    2024_4 Fall 2024 Semester Full Term
-                </p>
-                <button className="btn btn-primary"> Go </button>
-            </div>
-        </Link>
-        </div>
-        </div>
-        <div className="wd-dashboard-course col" style={{ width: "300px" }}>
-            <div className="card rounded-3 overflow-hidden">
-          <Link className="wd-dashboard-course-link text-decoration-none text-dark"
-                to="/Kanbas/Courses/5591/Home">
-            <img src="/images/reactjs.jpg" width="100%" height={160}/>
-            <div className="card-body">
-                <h5 className="wd-dashboard-course-title card-title">
-                    BIOL5591 Advanced Genomics
-                </h5>
-                <p className="wd-dashboard-course-title card-text">
-                    2024_5 Fall 2024 Semester Full Term
-                </p>
-
-                <button className="btn btn-primary"> Go </button>
-            </div>
-        </Link>
-        </div>
-        </div>
-        <div className="wd-dashboard-course col" style={{ width: "300px" }}>
-            <div className="card rounded-3 overflow-hidden">
-          <Link className="wd-dashboard-course-link text-decoration-none text-dark"
-                to="/Kanbas/Courses/5591/Home">
-            <img src="/images/reactjs.jpg" width="100%" height={160}/>
-            <div className="card-body">
-                <h5 className="wd-dashboard-course-title card-title">
-                    BIOL5591 Advanced Genomics
-                </h5>
-                <p className="wd-dashboard-course-title card-text">
-                    2024_6 Fall 2024 Semester Full Term
-                </p>
-                <button className="btn btn-primary"> Go </button>
-            </div>
-        </Link>
-        </div>
-        </div>
-        <div className="wd-dashboard-course col" style={{ width: "300px" }}>
-            <div className="card rounded-3 overflow-hidden">
-          <Link className="wd-dashboard-course-link text-decoration-none text-dark"
-                to="/Kanbas/Courses/5591/Home">
-            <img src="/images/reactjs.jpg" width="100%" height={160}/>
-            <div className="card-body">
-                <h5 className="wd-dashboard-course-title card-title">
-                    BIOL5591 Advanced Genomics
-                </h5>
-                <p className="wd-dashboard-course-title card-text">
-                    2024_7 Fall 2024 Semester Full Term
-                </p>
-                <button className="btn btn-primary"> Go </button>
-            </div>
-        </Link>
-        </div>
-        </div> */}
-//         </div>
-//         </div>
-//     </div>
-//     );
-// }
 
