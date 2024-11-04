@@ -3,21 +3,20 @@ import { useSelector } from "react-redux";
 
 export default function AccountNavigation() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
+  const links = currentUser ? [{ path: "/Kanbas/Account/Profile", label: "Profile" }] 
+  : [
+      { path: "/Kanbas/Account/Signin", label: "Signin" }, 
+      { path: "/Kanbas/Account/Signup", label: "Signup" }
+    ];
   const { pathname } = useLocation();
 
 
   return (
-    // <div id="wd-account-navigation">
-    //   <Link to={`/Kanbas/Account/Signin`}  > Signin  </Link> <br/>
-    //   <Link to={`/Kanbas/Account/Signup`}  > Signup  </Link> <br/>
-    //   <Link to={`/Kanbas/Account/Profile`} > Profile </Link> <br/>
       <div id="wd-account-navigation" className="wd list-group fs-5 rounded-0">
-      <Link id="wd-account-signin-link"    to="/Kanbas/Account/Signin" 
-      className="list-group-item active border border-0">Signin</Link>
-      <Link id="wd-account-signup-link" to="/Kanbas/Account/Signup"
-      className="list-group-item text-danger border border-0" >Signup </Link>
-      <Link id="wd-account-profile-link"  to="/Kanbas/Account/Profile"
-      className="list-group-item text-danger border border-0" >Profile </Link>
+        {links.map((link) => (
+        <Link key={link.path} to={link.path} className={`list-group-item bg-white text-left border-0
+              ${pathname.includes(link.label) ? "active border border-0" : "text-danger border border-0"}`}>
+          {link.label}
+        </Link>))}
     </div>
 );}
