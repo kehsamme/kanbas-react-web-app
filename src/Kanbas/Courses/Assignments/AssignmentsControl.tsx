@@ -1,9 +1,20 @@
 
 import { FaPlus } from "react-icons/fa6";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import AssignmentEditor from "./AssignmentEditor";
 
-import { MdDoNotDisturbAlt } from "react-icons/md";
-export default function AssignmentsControl() {
+
+export default function AssignmentsControl(
+  { assignmentName, setAssignmentName, addAssignment }:
+  { assignmentName: string; setAssignmentName: (title: string) => void; addAssignment: () => void; }) 
+
+// {
+//   assignmentId, 
+//   deleteAssignment, editAssignment}: { assignmentId: string; 
+//   deleteAssignment: (assignmentId: string) => void; 
+//   editAssignment: (assignmentId: string) => void } )
+ {
+    
     return(
       <div id="wd-modules-controls" className="d-flex text-nowrap">
         <div id="wd-css-responsive-forms-2" className="flex-grow-1">
@@ -14,12 +25,15 @@ export default function AssignmentsControl() {
                 <input type="search" className="form-control border-start-0" id="r1" placeholder="Search" style={{width: "50%"}}/>
             </div> 
             </div>
-        <button id="wd-add-module-btn" className="btn btn-lg btn-danger me-1 float-end">
+        <button id="wd-add-module-btn" className="btn btn-lg btn-danger me-1 float-end"
+                data-bs-toggle="modal" data-bs-target="#wd-add-module-dialog" >
           <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
           Assignment</button>
         <button id="wd-view-progress" className="btn btn-lg btn-secondary me-1 float-end">
           <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
           Group</button>
-        </div>
+          <AssignmentEditor 
+            dialogTitle="Add Assignment" />        
+            </div>
   );
 }
