@@ -12,6 +12,8 @@ import { addAssignment, editAssignment, updateAssignment, deleteAssignment } fro
 
 export default function Assignments() {
     const { cid } = useParams();
+    const dispatch = useDispatch();
+
     const [assignments, setAssignment] = useState<any[]>(db.assignments);
 
     const [assignmentName, setAssignmentName] = useState("");
@@ -25,17 +27,18 @@ export default function Assignments() {
     };
   
   
-    // const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-    // const dispatch = useDispatch();
+    
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const isFaculty = currentUser.role === "FACULTY";
 
+  
     
 
     return (
       <div id="wd-assignments">
         {isFaculty && (  
-        <AssignmentsControl />
+        <AssignmentsControl  />
+
         )}
         <br /><br />
         <ul className="list-group rounded-0">
@@ -76,10 +79,7 @@ export default function Assignments() {
             Due {dueDate} at 11:59pm | {assignment.points}
             <AssignmentsControlButtons assignmentId={assignment._id}
               deleteAssignment={deleteAssignment}
-          //   assignmentId="" 
-          // deleteAssignment={(assignmentId: string) => {
-          //   dispatch(deleteAssignment(assignmentId)); 
-          // }}
+
           />
             </div>
             </li>

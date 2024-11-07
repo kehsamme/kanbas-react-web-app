@@ -1,8 +1,14 @@
 
 import { FaPlus } from "react-icons/fa6";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import AssignmentEditor from "./Editor";
+import AssignmentEditor_22 from "./editor_2";
+import { useParams } from "react-router";
+import { useState } from "react";
+import * as db from "../../Database";
 
+interface AssignmentsControlProps {
+  addAssignment: (assignmentData: any) => void;  // Accepting the function as a prop
+}
 
 export default function AssignmentsControl() 
 
@@ -12,7 +18,7 @@ export default function AssignmentsControl()
 //   deleteAssignment: (assignmentId: string) => void; 
 //   editAssignment: (assignmentId: string) => void } )
  {
-    
+
     return(
       <div id="wd-modules-controls" className="d-flex text-nowrap">
         <div id="wd-css-responsive-forms-2" className="flex-grow-1">
@@ -30,6 +36,8 @@ export default function AssignmentsControl()
         <button id="wd-view-progress" className="btn btn-lg btn-secondary me-1 float-end">
           <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
           Group</button>
-            </div>
+        <AssignmentEditor_22 dialogTitle="Add Assignment" />
+      </div>
+
   );
 }
