@@ -17,17 +17,37 @@ const assignmentsSlice = createSlice({
         course: assignment.course,
         description: assignment.description
       };
-      state.assignments = [...state.assignments, newAssignment] as any;
+      state.assignments.push(newAssignment);
     },
     deleteAssignment: (state, { payload: assignmentId }) => {
       state.assignments = state.assignments.filter(
         (a: any) => a._id !== assignmentId);
     },
-    updateAssignment: (state, { payload: assignment }) => {
-      state.assignments = state.assignments.map((a: any) =>
-        a._id === assignment._id ? assignment : a
-      ) as any;
-    },
+    // updateAssignment: (state, { payload: newAssignment }) => {
+    //   state.assignments = state.assignments.map((a: any) =>
+    //     a._id === newAssignment._id ? newAssignment : a
+    //   ) as any;
+    // },
+    updateAssignment: (state, { payload: updatedAssignment }) => {
+      state.assignments = state.assignments.map((assignment: any) => {
+          if (assignment._id === updatedAssignment._id) {
+              const availableDate = new Date(updatedAssignment.available);
+              const dueDate = new Date(updatedAssignment.due);
+
+              // Format directly to string to avoid timezone shifts
+              const formattedAvailableDate = availableDate.toISOString().split('T')[0];
+              const formattedDueDate = dueDate.toISOString().split('T')[0];
+
+              return {
+                  ...assignment,
+                  ...updatedAssignment,
+                  available: formattedAvailableDate,
+                  due: formattedDueDate
+              };
+          }
+          return assignment;
+      });
+  },
     editAssignment: (state, { payload: assignmentId }) => {
       state.assignments = state.assignments.map((a: any) =>
         a._id === assignmentId ? { ...a, editing: true } : a

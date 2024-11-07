@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Assuming you're using react-router for navigation
 import { addAssignment } from "./reducer";
 
-export default function AssignmentEditor({
+export default function AssignmentEditor_2({
   dialogTitle,
 }: {
   dialogTitle: string;
 }) {
+
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -126,7 +127,7 @@ export default function AssignmentEditor({
     </div>
   );
 }
-
+// pt 1
 // export default function AssignmentEditor({ dialogTitle, assignmentName, setAssignmentName, addAssignment }:
 //     { dialogTitle: string; assignmentName: string; setAssignmentName: (name: string) => void; addAssignment: () => void; }) {
 //       return (

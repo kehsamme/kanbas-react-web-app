@@ -35,7 +35,7 @@ export default function Assignments() {
     return (
       <div id="wd-assignments">
         {isFaculty && (  
-        <AssignmentsControl setAssignmentName={setAssignmentName} assignmentName={assignmentName} addAssignment={addAssignment}/>
+        <AssignmentsControl />
         )}
         <br /><br />
         <ul className="list-group rounded-0">

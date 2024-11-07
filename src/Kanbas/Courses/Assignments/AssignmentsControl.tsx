@@ -1,12 +1,10 @@
 
 import { FaPlus } from "react-icons/fa6";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import AssignmentEditor from "./AssignmentEditor";
+import AssignmentEditor from "./Editor";
 
 
-export default function AssignmentsControl(
-  { assignmentName, setAssignmentName, addAssignment }:
-  { assignmentName: string; setAssignmentName: (title: string) => void; addAssignment: () => void; }) 
+export default function AssignmentsControl() 
 
 // {
 //   assignmentId, 
@@ -32,8 +30,6 @@ export default function AssignmentsControl(
         <button id="wd-view-progress" className="btn btn-lg btn-secondary me-1 float-end">
           <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
           Group</button>
-          <AssignmentEditor 
-            dialogTitle="Add Assignment" />        
             </div>
   );
 }

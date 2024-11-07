@@ -2,17 +2,68 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as db from "../Database";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-export default function Dashboard({ courses, course, setCourse, addNewCourse,
-    deleteCourse, updateCourse }: {
-    courses: any[]; course: any; setCourse: (course: any) => void;
-    addNewCourse: () => void; deleteCourse: (course: any) => void;
-    updateCourse: () => void; })
-   {
+
+// interface Course {
+//   _id: string;
+//   name: string;
+//   description: string;
+//   image: string;
+// }
+
+// interface Enrollment {
+//   user: string;
+//   course: string;
+// }
+// const [courses, setCourses] = useState<any[]>(db.courses);
+// const [course, setCourse] = useState<any>({
+//   _id: "0", name: "New Course", number: "New Number",
+//   startDate: "2023-09-10", endDate: "2023-12-15",
+//   image: "/images/reactjs.jpg", description: "New Description"
+// });
+// const addNewCourse = () => {
+//   const newCourse = { ...course,
+//                       _id: new Date().getTime().toString() };
+//   setCourses([...courses, newCourse ]);
+// };
+// const deleteCourse = (courseId: string) => {
+//   setCourses(courses.filter((course) => course._id !== courseId));
+// };
+// const updateCourse = () => {
+//   setCourses(
+//     courses.map((c) => {
+//       if (c._id === course._id) {
+//         return course;
+//       } else {
+//         return c;
+//       }
+//     })
+//   );
+// };
+
+
+
+export default function Dashboard({ courses, 
+  course, 
+  setCourse, 
+  addNewCourse,
+  deleteCourse, 
+  updateCourse }: {
+  courses: any[]; course: any; setCourse: (course: any) => void;
+  addNewCourse: () => void; deleteCourse: (course: any) => void;
+  updateCourse: () => void; }) {
+   
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = db;
+    // const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
+
   
     const isFaculty = currentUser.role === "FACULTY";
+    const isStudent = currentUser.role === "STUDENT";
+
+    const navigate = useNavigate();
+        
 
     const enrolledCourses = courses.filter((course) =>
       enrollments.some(
@@ -45,6 +96,16 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
             onChange={(e) => setCourse({ ...course, description: e.target.value }) }/>
       <hr />
       </> )}
+      {isStudent && (
+          <Link
+              to={`/Kanbas/Enrollment`}
+              className="text-decoration-none text-black"
+          >
+              <button className="btn btn-primary float-end"
+                      id="wd-add-new-course-click"> Enrollments </button>
+          </Link>
+      )}
+
       <h2 id="wd-dashboard-published">Published Courses ({enrolledCourses.length})</h2> <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
@@ -56,7 +117,9 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                     enrollment.course === course._id
                     ))
             .map((course) => ( */}
+            {/* {enrolledCourses.map((course: Course) => ( */}
             {enrolledCourses.map((course) => (
+
 
             <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden">
@@ -97,5 +160,4 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
         </div>
       </div>
     </div>);}
-
 
