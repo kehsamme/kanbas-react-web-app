@@ -3,42 +3,21 @@ import { BsGripVertical } from "react-icons/bs";
 import { PiNotePencil } from "react-icons/pi";
 import AssignmentPercentButtons from "./AssignmentPercentButtons";
 import AssignmentsControlButtons from "./AssignmentControlsButtons"
-import * as db from "../../Database";
-import { Link } from "react-router-dom"; 
 import { useParams } from "react-router";
-import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addAssignment, editAssignment, updateAssignment, deleteAssignment } from "./reducer";
 
 export default function Assignments() {
     const { cid } = useParams();
     const dispatch = useDispatch();
-
-    const [assignments, setAssignment] = useState<any[]>(db.assignments);
-
-    const [assignmentName, setAssignmentName] = useState("");
-    const addAssignment = () => {
-      setAssignment([ ...assignments, { _id: new Date().getTime().toString(),
-                                       name: assignmentName, course: cid } ]);
-      setAssignmentName("");
-    };
-    const deleteAssignment = (assignmentId: string) => {
-      setAssignment(assignments.filter((a) => a._id !== assignmentId));
-    };
-  
-  
-    
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const isFaculty = currentUser.role === "FACULTY";
-
-  
+    const isFaculty = currentUser.role === "FACULTY";  
     
 
     return (
       <div id="wd-assignments">
         {isFaculty && (  
         <AssignmentsControl  />
-
         )}
         <br /><br />
         <ul className="list-group rounded-0">
@@ -78,8 +57,6 @@ export default function Assignments() {
             <span className="red-text">Multiple Modules</span> | <strong>Not available</strong> until {availabilityDate} at 12:00am |<br/>
             Due {dueDate} at 11:59pm | {assignment.points}
             <AssignmentsControlButtons assignmentId={assignment._id}
-              deleteAssignment={deleteAssignment}
-
           />
             </div>
             </li>
