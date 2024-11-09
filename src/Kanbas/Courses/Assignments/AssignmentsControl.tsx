@@ -2,9 +2,10 @@
 import { FaPlus } from "react-icons/fa6";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import AssignmentEditor_22 from "./editor_2";
-import { useParams } from "react-router";
-import { useState } from "react";
-import * as db from "../../Database";
+// import { useParams } from "react-router";
+// import { useState } from "react";
+// import * as db from "../../Database";
+// import AssignmentDelete from "./AssignmentDelete";
 
 interface AssignmentsControlProps {
   addAssignment: (assignmentData: any) => void;  // Accepting the function as a prop
@@ -12,11 +13,6 @@ interface AssignmentsControlProps {
 
 export default function AssignmentsControl() 
 
-// {
-//   assignmentId, 
-//   deleteAssignment, editAssignment}: { assignmentId: string; 
-//   deleteAssignment: (assignmentId: string) => void; 
-//   editAssignment: (assignmentId: string) => void } )
  {
 
     return(

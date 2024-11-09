@@ -23,18 +23,12 @@ const assignmentsSlice = createSlice({
       state.assignments = state.assignments.filter(
         (a: any) => a._id !== assignmentId);
     },
-    // updateAssignment: (state, { payload: newAssignment }) => {
-    //   state.assignments = state.assignments.map((a: any) =>
-    //     a._id === newAssignment._id ? newAssignment : a
-    //   ) as any;
-    // },
     updateAssignment: (state, { payload: updatedAssignment }) => {
       state.assignments = state.assignments.map((assignment: any) => {
           if (assignment._id === updatedAssignment._id) {
               const availableDate = new Date(updatedAssignment.available);
               const dueDate = new Date(updatedAssignment.due);
 
-              // Format directly to string to avoid timezone shifts
               const formattedAvailableDate = availableDate.toISOString().split('T')[0];
               const formattedDueDate = dueDate.toISOString().split('T')[0];
 
