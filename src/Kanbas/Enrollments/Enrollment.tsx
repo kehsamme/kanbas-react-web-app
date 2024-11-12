@@ -1,5 +1,4 @@
 import { enrollCourse, unenrollCourse } from "./reducer";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState } from "react";
 
@@ -7,8 +6,6 @@ export default function Enroll({ courses }: { courses: any[] }) {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
-
-    const [showAllCourses, setShowAllCourses] = useState(false);
 
     const isEnrolled = (courseId: string) => {
         return enrollments.some(
@@ -29,8 +26,6 @@ export default function Enroll({ courses }: { courses: any[] }) {
         dispatch(enrollCourse({ user: currentUser._id, cid: courseId }));
     };
 
-    const toggleShowAllCourses = () => setShowAllCourses((prev) => !prev);
-
     const isStudent = currentUser.role === "STUDENT";
 
     return (
@@ -38,26 +33,12 @@ export default function Enroll({ courses }: { courses: any[] }) {
             <h1 id="wd-dashboard-title">Dashboard</h1>
             <hr />
             <h2 id="wd-dashboard-published">
-                Published Courses ({showAllCourses ? courses.length : enrollments.length})
+                Published Courses ({courses.length})
             </h2>
-            <hr />
-
-            {/* "Enrollments" button for toggling between showing all and enrolled courses */}
-            {isStudent && (
-                <button
-                    onClick={toggleShowAllCourses}
-                    className="btn btn-primary"
-                    style={{ position: "absolute", top: 0, right: 0 }}
-                >
-                    {showAllCourses ? "Show Enrolled Courses" : "Show All Courses"}
-                </button>
-            )}
 
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {courses
-                        .filter((course) => showAllCourses || isEnrolled(course._id))
-                        .map((course) => (
+                    {courses.map((course) => (
                             <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
                                 <div className="card rounded-3 overflow-hidden">
                                     <div className="wd-dashboard-course-link text-decoration-none text-dark">

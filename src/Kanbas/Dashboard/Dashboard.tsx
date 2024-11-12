@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import * as db from "../Database";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 
 export default function Dashboard({ courses, 
@@ -13,26 +11,14 @@ export default function Dashboard({ courses,
   updateCourse }: {
   courses: any[]; course: any; setCourse: (course: any) => void;
   addNewCourse: () => void; deleteCourse: (course: any) => void;
-  updateCourse: () => void; }) {
+  updateCourse: () => void; 
+}) {
    
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const { enrollments } = db;
-    // const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
-
+    const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
   
     const isFaculty = currentUser.role === "FACULTY";
     const isStudent = currentUser.role === "STUDENT";
-
-    const navigate = useNavigate();
-        
-
-    const enrolledCourses = courses.filter((course) =>
-      enrollments.some(
-        (enrollment) =>
-          enrollment.user === currentUser._id && enrollment.course === course._id
-      )
-    );
-
 
    
   return (
@@ -67,22 +53,20 @@ export default function Dashboard({ courses,
           </Link>
       )}
 
-      <h2 id="wd-dashboard-published">Published Courses ({enrolledCourses.length})</h2> <hr />
+      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {/* {courses
-                .filter((course) =>
-                enrollments.some(
-                    (enrollment) =>
-                    enrollment.user === currentUser._id &&
-                    enrollment.course === course._id
-                    ))
-            .map((course) => ( */}
-            {/* {enrolledCourses.map((course: Course) => ( */}
-            {enrolledCourses.map((course) => (
-
-
-            <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
+        {courses
+            .filter((course) => {
+                for (let i = 0; i < enrollments.length; i++) {
+                    if (enrollments[i].user === currentUser._id && enrollments[i].course === course._id) {
+                        return true;
+                    }
+                }
+                return false;
+            })
+            .map((course) => (
+            <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden">
                 <Link to={`/Kanbas/Courses/${course._id}/Home`}
                       className="wd-dashboard-course-link text-decoration-none text-dark" >
@@ -116,9 +100,10 @@ export default function Dashboard({ courses,
                   </div>
                 </Link>
               </div>
-            </div>
+            </div> 
           ))}
-        </div>
+        </div> 
       </div>
-    </div>);}
+      </div>
 
+  );}
