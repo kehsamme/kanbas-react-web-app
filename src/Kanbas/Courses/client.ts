@@ -25,4 +25,16 @@ export const createModuleForCourse = async (courseId: string, module: any) => {
     );
     return response.data;
 };
+// export const createAssignmentForCourse = async (courseId: string, assignment: any) => {
+//   console.log("in create assignment client...");
+
+//   const response = await axios.post(
+//     `${COURSES_API}/${courseId}/assignments`,
+//     assignment
+//   );
+//   console.log("API Response:", response.data); 
+//   return response.data;
+// };
+
+
   

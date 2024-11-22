@@ -16,7 +16,8 @@ export default function ModulesControls({ moduleName, setModuleName, addModule }
         <button id="wd-publish-all-btn" className="btn btn-lg btn-secondary dropdown-toggle"
           type="button" data-bs-toggle="dropdown">
           <GreenCheckmark />
-          Publish All</button>
+          Publish All
+        </button>
         <ul className="dropdown-menu">
           <li>
             <a id="wd-publish-all-modules-and-items-btn" className="dropdown-item" href="#">

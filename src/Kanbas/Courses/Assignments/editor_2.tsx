@@ -1,44 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addAssignment } from "./reducer";
+import { addAssignment, updateAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
+import { useParams } from "react-router";
 
-interface AssignmentEditorProps {
-  dialogTitle: string;
-}
 
-export default function AssignmentEditor_22({ dialogTitle }: AssignmentEditorProps) {
+// interface AssignmentEditorProps {
+//   dialogTitle: string;
+// }
+
+export default function AssignmentEditor_22({ 
+    dialogTitle,
+    onClose,
+  }: {
+    dialogTitle: string;
+    onClose: () => void;
+  }) {
+    const { cid } = useParams();
+    
+    const createAssignmentForCourse = async (assignment_1: any) => {
+      console.log("in create assignment...");
+      console.log("New assignment_1", assignment_1)
+
+      if (!cid) return;
+      console.log("New assignment", assignment_1)
+      // const newAssignment = { name: assignmentName, course: cid };
+      const assignment = await assignmentsClient.createAssignmentForCourse(assignment_1);
+      console.log("New Assignment added:", assignment); // Debug Redux update
+      dispatch(addAssignment(assignment));
+    };
+  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
+  const [title, setAssignmentName] = useState("");
   const [description, setDescription] = useState("");
   const [points, setPoints] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [availableFrom, setAvailableFrom] = useState("");
-  const [availableUntil, setAvailableUntil] = useState("");
+  const [availability, setAvailableFrom] = useState("");
+  // const [availableUntil, setAvailableUntil] = useState("");
+
+  // // Populate state when editing
+  // useEffect(() => {
+  //   if (mode === "edit" && assignment) {
+  //     setAssignmentName(assignment.title || "");
+  //     setDescription(assignment.description || "");
+  //     setPoints(assignment.points || "");
+  //     setDueDate(assignment.due || "");
+  //     setAvailableFrom(assignment.availableFrom || "");
+  //     setAvailableUntil(assignment.availableUntil || "");
+  //   }
+  // }, [mode, assignment]);
+
+  
 
   const handleSave = () => {
-    // Dispatch addAssignment action with the form data
-    dispatch(
-      addAssignment({
-        name,
-        description,
-        points,
-        due: dueDate,
-        availability: availableFrom,
-        course: "RS101", // Replace this with actual course ID if needed
-      })
-    );
-
-    // Clear the form fields after saving
-    setName("");
-    setDescription("");
-    setPoints("");
-    setDueDate("");
-    setAvailableFrom("");
-    setAvailableUntil("");
+    if (!title || !points || !dueDate) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+  
+    const newAssignment = {
+      title,
+      description: description,
+      points: Number(points),
+      due: dueDate,
+      availability: availability,
+      course: cid
+    };
+  
+    console.log("Assignment Data??:", newAssignment);
+  
+    createAssignmentForCourse(newAssignment); // Log output here
+    console.log("Assignment handle save:", newAssignment);
+  
+    onClose();
   };
+
+
+    
 
   return (
     <div id="wd-add-module-dialog" className="modal fade" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -55,9 +97,9 @@ export default function AssignmentEditor_22({ dialogTitle }: AssignmentEditorPro
             <input
               className="form-control mb-3"
               id="a-name"
-              value={name}
+              value={title}
               placeholder="New Assignment"
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setAssignmentName(e.target.value)}
             />
 
             <textarea
@@ -98,7 +140,7 @@ export default function AssignmentEditor_22({ dialogTitle }: AssignmentEditorPro
                 <input
                   className="form-control"
                   id="a-available-from"
-                  value={availableFrom}
+                  value={availability}
                   placeholder="Available From"
                   onChange={(e) => setAvailableFrom(e.target.value)}
                   type="date"
@@ -109,9 +151,9 @@ export default function AssignmentEditor_22({ dialogTitle }: AssignmentEditorPro
                 <input
                   className="form-control"
                   id="a-available-until"
-                  value={availableUntil}
+                  value={dueDate}
                   placeholder="Available Until"
-                  onChange={(e) => setAvailableUntil(e.target.value)}
+                  onChange={(e) => setDueDate(e.target.value)}
                   type="date"
                 />
               </div>

@@ -6,7 +6,14 @@ import AssignmentDelete from "./AssignmentDelete";
 import { useState } from "react";
 
 
-export default function AssignmentsControlButtons({ assignmentId }: { assignmentId: string }) {
+export default function AssignmentsControlButtons(
+    {assignmentId,
+    deleteAssignment,
+    }: {
+      assignmentId: string;
+      deleteAssignment: ( assignmentId: string) => void;
+    }) 
+  {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser.role === "FACULTY";
 
@@ -29,6 +36,7 @@ export default function AssignmentsControlButtons({ assignmentId }: { assignment
           <AssignmentDelete
             dialogTitle="Delete Assignment"
             assignmentId={assignmentId}
+            onDelete={deleteAssignment}
             onClose={handleToggleDeleteModal} 
           />
         )}

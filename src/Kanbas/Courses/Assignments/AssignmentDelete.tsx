@@ -1,18 +1,25 @@
 import { useDispatch } from "react-redux";
 import { deleteAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
+
 
 interface AssignmentDeleteProps {
   dialogTitle: string;
   assignmentId: string;
+  onDelete: (assignmentId: string) => void;
   onClose: () => void;
 }
 
-export default function AssignmentDelete({ dialogTitle, assignmentId, onClose }: AssignmentDeleteProps) {
+export default function AssignmentDelete({ dialogTitle, assignmentId, onDelete, onClose }: AssignmentDeleteProps) {
   const dispatch = useDispatch();
+  console.log("in assignment delete..."+assignmentId);
 
-  // Dispatch delete action
+
+  // Delete action
   const handleDelete = () => {
-    dispatch(deleteAssignment(assignmentId)); 
+    console.log("in handle delete..."+assignmentId);
+    onDelete(assignmentId);
+    console.log("after handle deleted..."+assignmentId);
     onClose(); // Close after deleting
   };
 

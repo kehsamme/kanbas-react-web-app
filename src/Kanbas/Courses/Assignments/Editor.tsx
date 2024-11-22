@@ -7,6 +7,7 @@ import {useLocation, useNavigate, useParams} from "react-router";
 import { assignments } from "../../Database";
 import {useDispatch} from "react-redux";
 import {addAssignment, updateAssignment} from "./reducer";
+import * as assignmentsClient from "./client";
 // import {generateAssignmentID} from "./AssignmentIdGenerator";
 
 export default function AssignmentEditor() {
@@ -26,31 +27,119 @@ export default function AssignmentEditor() {
     // const newID = generateAssignmentID(cid, 1, assignments);
     const { pathname } = useLocation();
 
-    const handleSave = () => {
-        if (pathname.includes("new")) {
-            // Editing existing assignment
-            dispatch(updateAssignment({
-                _id: aid,
-                title,
-                description,
-                points,
-                due: new Date(due).toISOString().split("T")[0],
-                availability: new Date(available).toISOString().split("T")[0],
-                course: cid
-            }));
-        } else {
-            dispatch(addAssignment({
-                _id: `A${assignments.length + 1}`,
-                title,
-                description,
-                points,
-                due: new Date(due).toISOString().split("T")[0],
-                available: new Date(available).toISOString().split("T")[0],
-                course: cid
-            }));
-        }
-        navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    const saveAssignment = async (module: any) => {
+      await assignmentsClient.updateAssignment(module);
+      dispatch(updateAssignment(module));
     };
+
+    // const handleSave = () => {
+    //     if (pathname.includes("new")) {
+    //         // Editing existing assignment
+    //         dispatch(updateAssignment({
+    //             _id: aid,
+    //             title,
+    //             description,
+    //             points,
+    //             due: new Date(due).toISOString().split("T")[0],
+    //             availability: new Date(available).toISOString().split("T")[0],
+    //             course: cid
+    //         }));
+    //     } else {
+    //         dispatch(addAssignment({
+    //             _id: `A${assignments.length + 1}`,
+    //             title,
+    //             description,
+    //             points,
+    //             due: new Date(due).toISOString().split("T")[0],
+    //             available: new Date(available).toISOString().split("T")[0],
+    //             course: cid
+    //         }));
+    //     }
+    //     navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    // };
+
+    const handleSave = async () => {
+      if (!title || !points || !due || !available) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+    
+      const assignmentData = {
+        _id: aid || `A${assignments.length + 1}`, // Generate a new ID if creating
+        title,
+        description,
+        points,
+        due: new Date(due).toISOString().split("T")[0],
+        availability: new Date(available).toISOString().split("T")[0],
+        course: cid,
+      };
+    
+      if (aid) {
+        // If aid exists, update the assignment
+        try {
+          // dispatch(updateAssignment(assignmentData));
+          saveAssignment(assignmentData);
+          console.log("Assignment updated:", assignmentData);
+        } catch (error) {
+          console.error("Error updating assignment:", error);
+        }
+      } else {
+        // Else create a new assignment
+        try {
+          dispatch(addAssignment(assignmentData));
+          // createAssignmentForCourse(assignmentData)
+          console.log("New assignment created:", assignmentData);
+        } catch (error) {
+          console.error("Error creating assignment:", error);
+        }
+      }
+    
+      // Navigate back to assignments list
+      navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    };
+
+    // const handleSave = () => {
+    //   if (!title || !points || !due || !available) {
+    //     alert("Please fill in all required fields.");
+    //     return;
+    //   }
+    
+    //   // Validate and parse date fields
+    //   const parsedDue = new Date(due);
+    //   const parsedAvailable = new Date(available);
+    
+    //   if (isNaN(parsedDue.getTime()) || isNaN(parsedAvailable.getTime())) {
+    //     alert("Invalid date values provided. Please select valid dates.");
+    //     return;
+    //   }
+    
+    //   const assignmentData = {
+    //     _id: aid || `A${assignments.length + 1}`, // Generate new ID if creating
+    //     title,
+    //     description,
+    //     points,
+    //     due: parsedDue.toISOString().split("T")[0],
+    //     availability: parsedAvailable.toISOString().split("T")[0],
+    //     course: cid,
+    //   };
+    
+    //   try {
+    //     if (aid) {
+    //       // Update an existing assignment
+    //       saveAssignment(assignmentData);
+
+    //       // dispatch(updateAssignment(assignmentData));
+    //     } else {
+    //       // Add a new assignment
+    //       dispatch(addAssignment(assignmentData));
+    //     }
+    //     navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    //   } catch (error) {
+    //     console.error("Error saving assignment:", error);
+    //   }
+    // };
+    
+    
     return (
       <div>
         {assignments
@@ -163,7 +252,7 @@ export default function AssignmentEditor() {
                 <label htmlFor="wd-available-until"> Until </label> <br/>
                 <input className="form-control" type="date"
                 id="wd-available-until"
-                value={assignment.due}/> 
+                value={due}/> 
               </div>
             </div>
             </div>
