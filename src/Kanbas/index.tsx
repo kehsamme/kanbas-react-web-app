@@ -8,11 +8,14 @@ import KanbasNavigation from "./Navigation";
 import Courses from "./Courses";
 // import * as db from "./Database";
 import ProtectedRoute from "./Account/ProtectedRoute";
-import Enrollment from "./Enrollments/Enrollment";
+// import Enrollment from "./Enrollments/Enrollment"
+import Enrollment from "./Enrollments/Enrollment"
 import Session from "./Account/Session";
 import * as client from "./Courses/client";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
+import * as enrollmentClient from "./Courses/client";
+
 
 
 
@@ -22,8 +25,10 @@ export default function Kanbas() {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const fetchCourses = async () => {
       try {
-        const courses = await userClient.findMyCourses();
+        console.log("before find my courses")
+        const courses = await userClient.findAllCourses();
         setCourses(courses);
+        console.log(courses)
       } catch (error) {
         console.error(error);
       }

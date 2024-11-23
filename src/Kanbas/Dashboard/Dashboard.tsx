@@ -53,11 +53,19 @@ export default function Dashboard({ courses,
           </Link>
       )}
 
-      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
+      <h2 id="wd-dashboard-published">Published Courses 1 ({courses.length})</h2> <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
         {courses
-            .map((course) => (
+              .filter((course) => {
+                for (let i = 0; i < enrollments.length; i++) {
+                    if (enrollments[i].user === currentUser._id && enrollments[i].course === course._id) {
+                        return true;
+                    }
+                }
+                return false;
+            })
+              .map((course) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden">
                 <Link to={`/Kanbas/Courses/${course._id}/Home`}

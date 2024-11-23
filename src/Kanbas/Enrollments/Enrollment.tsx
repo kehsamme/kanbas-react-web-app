@@ -1,57 +1,11 @@
 import { enrollCourse, unenrollCourse } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import * as enrollmentsClient from "./client";
-
-type Course = {
-    _id: string; // Assuming the unique identifier for the course
-    name: string; // Course name
-    description?: string; // Optional description (if it exists)
-  };
+import React, { useState } from "react";
 
 export default function Enroll({ courses }: { courses: any[] }) {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
-
-    // const [localCourses, setLocalCourses] = useState<any[]>([]); // Placeholder for courses, replace with actual course fetching logic
-
-    // const fetchEnrollments = async () => {
-    //     if (!currentUser?._id) return;
-    //     const enrollments = await enrollmentsClient.getEnrollmentsForUser(
-    //       currentUser._id
-    //     );
-    //     dispatch(setEnrollments(enrollments));
-    //   };
-    
-    //   const handleEnroll = async (courseId: string) => {
-    //     if (!currentUser?._id) return;
-    //     const enrollment = await enrollmentsClient.enrollUser(
-    //       currentUser._id,
-    //       courseId
-    //     );
-    //     dispatch(enrollCourse(enrollment));
-    //   };
-    
-    //   const handleUnenroll = async (courseId: string) => {
-    //     if (!currentUser?._id) return;
-    //     await enrollmentsClient.unenrollUser(
-    //       currentUser._id,
-    //       courseId
-    //     );
-    //     dispatch(unenrollCourse({ userId: currentUser._id, courseId }));
-    //   };
-    
-    //   useEffect(() => {
-    //     fetchEnrollments();
-    //   }, []);
-
-    //   const isEnrolled = (courseId: string) =>
-    //     enrollments.some(
-    //       (enrollment: any) =>
-    //         enrollment.user === currentUser._id && enrollment.course === courseId
-    //     );
-
 
     const isEnrolled = (courseId: string) => {
         return enrollments.some(
@@ -72,7 +26,6 @@ export default function Enroll({ courses }: { courses: any[] }) {
         dispatch(enrollCourse({ user: currentUser._id, cid: courseId }));
     };
 
-
     const isStudent = currentUser.role === "STUDENT";
 
     return (
@@ -80,7 +33,7 @@ export default function Enroll({ courses }: { courses: any[] }) {
             <h1 id="wd-dashboard-title">Dashboard</h1>
             <hr />
             <h2 id="wd-dashboard-published">
-                Published Courses ({courses.length})
+                Published Courses 2 ({courses.length})
             </h2>
 
             <div id="wd-dashboard-courses" className="row">
@@ -123,5 +76,4 @@ export default function Enroll({ courses }: { courses: any[] }) {
         </div>
     );
 }
-
 
