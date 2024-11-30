@@ -43,33 +43,76 @@
 
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { enrollments } from "../Database";
+//import { enrollments } from "../Database";
 
 const initialState = {
-    // enrollments: [], 
-    enrollments: enrollments || [], 
+     enrollments: [], 
+    //enrollments: enrollments || [], 
 };
 
 const enrollmentSlice = createSlice({
     name: "enrollments",
     initialState,
     reducers: {
-        enrollCourse: (state, action: PayloadAction<{ user: string; cid: string }>) => {
-            const { user, cid } = action.payload;
-            const newEnrollment = {
-                _id: `${Date.now()}`,
-                user: user,
-                course: cid,
+        setEnrollment: (state, action) => {
+            console.log("set enrollments to : " );
+            console.timeLog(action.payload);
+            state.enrollments = action.payload;
+          },
+        //   enrollCourse: (state, { payload: enrollment }) => {
+        //     console.log("In enrollmentSlice reducer...");
+        //     console.log(enrollment);
+        //     const newEnrollment: any = {
+        //       _id: new Date().getTime().toString(),
+        //       userId: enrollment.user,
+        //       courseId: enrollment.cid,
+        //     };
+        //     // state.enrollments.push(newEnrollment);
+
+        //     state.enrollments = [...state.enrollments, newEnrollment] as any;
+        //     console.log(state.enrollments);
+
+        // },
+        enrollCourse: (state, { payload: enrollment }) => {
+            const newEnrollment: any = {
+              _id: new Date().getTime().toString(),
+              user: enrollment.user,
+              course: enrollment.cid
             };
-            state.enrollments.push(newEnrollment);
-        },
-        unenrollCourse: (state, action: PayloadAction<{ user: string; course: string }>) => {
-            state.enrollments = state.enrollments.filter(
-                (enrollment) => !(enrollment.user === action.payload.user && enrollment.course === action.payload.course)
-            );
+            state.enrollments = [...state.enrollments, newEnrollment] as any;
+          },
+        // enrollCourse: (state, action: PayloadAction<{ user: string; cid: string }>) => {
+        //     console.log("In enrollmentSlice reducer...");
+        //     const { user, cid } = action.payload;
+        //     const newEnrollment = {
+        //         _id: `${Date.now()}`,
+        //         user: user,
+        //         course: cid,
+        //     };
+
+        //     console.log(newEnrollment);
+        //     state.enrollments.push(newEnrollment);
+
+        // },
+        // deleteAssignment: (state, { payload: assignmentId }) => {
+        //     console.log("in delete assignment reducer...");
+        //     state.assignments = state.assignments.filter(
+        //       (a: any) => a._id !== assignmentId);
+        //   },
+        // unenrollCourse:  (state, { payload: enrollment }) => {
+        //     state.enrollments = state.enrollments.filter(
+        //         (enroll) => !(enroll.user === action.payload.user && enrollment.course === action.payload.course)
+        //     );
+        // },
+        unenrollCourse:  (state, { payload: enrollment }) => {
+            // console.log("in unenrollCourse reducer...", enrollment.course);
+            // state.enrollments = state.enrollments.filter(
+            //   (a: any) => (a.user !== enrollment.user && a.course !== enrollment.course));
+
+            //   console.log(state.enrollments);
         },
     },
 });
 
-export const { enrollCourse, unenrollCourse } = enrollmentSlice.actions;
+export const { setEnrollment, enrollCourse, unenrollCourse} = enrollmentSlice.actions;
 export default enrollmentSlice.reducer;

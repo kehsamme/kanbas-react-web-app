@@ -9,20 +9,20 @@ export const updateAssignment = async (assignment: any) => {
   
 
 export const deleteAssignment = async ( assignmentId: string) => {
-    console.log("in delete assignment api call..."+ assignmentId);
+    //console.log("in delete assignment api call..."+ assignmentId);
     const response = await axios.delete(`${COURSES_API}/assignments/${assignmentId}`);
-    console.log(response);
+    //console.log(response);
     return response.data;
    };
 
 export const createAssignmentForCourse = async ( assignment: any) => {
-    console.log("in create assignment client...");
+   // console.log("createAssignmentForCourse for api call ...");
   
     const response = await axios.post(
       `${COURSES_API}/assignments`,
       assignment
     );
-    console.log("API Response:", response.data); 
+    //console.log("API Response:", response.data); 
     return response.data;
   };
   

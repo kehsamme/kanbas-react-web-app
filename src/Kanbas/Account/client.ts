@@ -25,16 +25,16 @@ export const signout = async () => {
     return response.data;
 };
 export const findMyCourses = async () => {
-  console.log("test find my course")
+  //console.log("test find my course")
 
   const { data } = await axiosWithCredentials.get(`${USERS_API}/current/courses`);
   return data;
 };
 // 
 export const findAllCourses = async () => {
-  console.log("test find all course");
+  //console.log("test find all course");
   const { data } = await axiosWithCredentials.get(`${REMOTE_SERVER}/api/courses`);
-  console.log(data);
+  //console.log(data);
   return data;
 };
 export const createCourse = async (course: any) => {

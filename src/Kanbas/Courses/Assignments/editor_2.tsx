@@ -20,14 +20,14 @@ export default function AssignmentEditor_22({
     const { cid } = useParams();
     
     const createAssignmentForCourse = async (assignment_1: any) => {
-      console.log("in create assignment...");
-      console.log("New assignment_1", assignment_1)
+     // console.log("in createAssignmentForCourse ...");
+      //console.log("New assignment_1", assignment_1)
 
       if (!cid) return;
-      console.log("New assignment", assignment_1)
+      //console.log("New assignment: ", assignment_1)
       // const newAssignment = { name: assignmentName, course: cid };
       const assignment = await assignmentsClient.createAssignmentForCourse(assignment_1);
-      console.log("New Assignment added:", assignment); // Debug Redux update
+      //console.log("New Assignment return from api call:", assignment); // Debug Redux update
       dispatch(addAssignment(assignment));
     };
   
@@ -71,10 +71,10 @@ export default function AssignmentEditor_22({
       course: cid
     };
   
-    console.log("Assignment Data??:", newAssignment);
+    //console.log("handleSave Assignment Data??:", newAssignment);
   
     createAssignmentForCourse(newAssignment); // Log output here
-    console.log("Assignment handle save:", newAssignment);
+    //console.log("Assignment handle saved:", newAssignment);
   
     onClose();
   };

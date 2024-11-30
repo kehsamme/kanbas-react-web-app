@@ -12,14 +12,14 @@ interface AssignmentDeleteProps {
 
 export default function AssignmentDelete({ dialogTitle, assignmentId, onDelete, onClose }: AssignmentDeleteProps) {
   const dispatch = useDispatch();
-  console.log("in assignment delete..."+assignmentId);
+  //console.log("in assignment delete..."+assignmentId);
 
 
   // Delete action
   const handleDelete = () => {
-    console.log("in handle delete..."+assignmentId);
+    //console.log("in handle delete..."+assignmentId);
     onDelete(assignmentId);
-    console.log("after handle deleted..."+assignmentId);
+    //console.log("after handle deleted..."+assignmentId);
     onClose(); // Close after deleting
   };
 

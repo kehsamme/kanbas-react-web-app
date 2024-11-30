@@ -1,11 +1,38 @@
-import { enrollCourse, unenrollCourse } from "./reducer";
+import { setEnrollment, enrollCourse, unenrollCourse } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import * as enrollmentsClient from "./client";
 
 export default function Enroll({ courses }: { courses: any[] }) {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
+
+    // const removeCourse = async (userId: string, courseId: string) => {
+    //     await enrollmentsClient.unenrollUser(userId, courseId);
+    //     dispatch(unenrollCourse(enrollments));
+    //   };
+    
+      
+    const fetchEnrollments = async () => {
+        console.log("in fetchEnrollments ...", currentUser._id );
+        const enrollments = await enrollmentsClient.getEnrollmentsForUser(currentUser._id as string);
+
+        console.log(enrollments);
+
+        dispatch(setEnrollment(enrollments));
+      };
+      useEffect(() => {
+        fetchEnrollments();
+      }, []);
+
+
+    const addCourse = async (userId: string, courseId: string) => {
+    await enrollmentsClient.enrollUser(userId, courseId);
+    console.log("add course...");
+    dispatch(enrollCourse({ user: currentUser._id, cid: courseId }));
+    };
+    
 
     const isEnrolled = (courseId: string) => {
         return enrollments.some(
@@ -13,17 +40,41 @@ export default function Enroll({ courses }: { courses: any[] }) {
         );
     };
 
-    const handleUnenroll = (courseId: string) => {
-        const enrollment = enrollments.find(
-            (enrollment: any) => enrollment.user === currentUser._id && enrollment.course === courseId
-        );
-        if (enrollment) {
-            dispatch(unenrollCourse(enrollment));
-        }
+    const handleUnenroll = async (courseId: string) => {
+    //const handleUnenroll = (courseId: string) => {
+
+        console.log("in handleUnenroll... calling api...");
+
+        const enrollments =  await enrollmentsClient.unenrollUser(currentUser._id as string, courseId as string);
+
+        console.log(enrollments);
+
+        // const enrollment = enrollments.find(
+        //     (enrollment: any) => enrollment.user === currentUser._id && enrollment.course === courseId
+        // );
+        // if (enrollment) {
+        //     dispatch(unenrollCourse(enrollment));
+        // }
+
+        dispatch(setEnrollment(enrollments));
     };
 
+    // // testig
+    // const handleUnenroll = (courseId: string) => {
+    //     const enrollment = enrollments.find(
+    //         (enrollment: any) => enrollment.user === currentUser._id && enrollment.course === courseId
+    //     );
+    //     if (enrollment) {
+    //         removeCourse(enrollment);
+    //     }
+    // };
+
+    // const handleEnroll = (courseId: string) => {
+    //     dispatch(enrollCourse({ user: currentUser._id, cid: courseId }));
+    // };
     const handleEnroll = (courseId: string) => {
-        dispatch(enrollCourse({ user: currentUser._id, cid: courseId }));
+        console.log("handle enroll...");
+        addCourse( currentUser._id, courseId );
     };
 
     const isStudent = currentUser.role === "STUDENT";

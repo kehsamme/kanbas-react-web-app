@@ -32,12 +32,13 @@ export default function Assignments() {
   
 
     const removeAssignment = async ( assignmentId: string) => {
-      console.log("in remove assignment...");
+      //console.log("in remove assignment...");
       await assignmentsClient.deleteAssignment(assignmentId);
       dispatch(deleteAssignment(assignmentId));
     };
   
     const fetchAssignments = async () => {
+      //console.log("in fetchAssignments...");
       const assignments = await assignmentsClient.findAssignmentForCourse(cid as string);
       dispatch(setAssignment(assignments));
     };
@@ -70,7 +71,9 @@ export default function Assignments() {
             const dueDate = new Date(assignment.due).toLocaleDateString('en-US', {
               month: 'long', day: 'numeric'
             });
-            
+            const title = assignment.title;
+            //console.log("title ...." + title);
+
             return (
               <li className="wd-lesson list-group-item p-3 ps-1">
             <BsGripVertical className="me-2 fs-3" />

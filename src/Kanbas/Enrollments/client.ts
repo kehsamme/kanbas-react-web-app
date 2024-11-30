@@ -4,7 +4,10 @@ const ENROLL_API = `${REMOTE_SERVER}/api/enrollments`;
 
 // Enroll a user
 export const enrollUser = async (userId: string, courseId: string) => {
+    console.log("enroll user client...calling api...");
+    console.log(ENROLL_API, userId, courseId);
     const response = await axios.post(ENROLL_API, { userId, courseId });
+    console.log(response);
     return response.data;
 };
 
@@ -16,7 +19,10 @@ export const unenrollUser = async (userId: string, courseId: string) => {
 
 // Fetch enrollments for a user
 export const getEnrollmentsForUser = async (userId: string) => {
+    console.log("in getEnrollmentsForUser client ...", userId);
     const response = await axios.get(`${ENROLL_API}/${userId}`);
+
+    console.log(response);
     return response.data;
 };
 

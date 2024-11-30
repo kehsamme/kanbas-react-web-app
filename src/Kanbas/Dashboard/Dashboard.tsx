@@ -1,6 +1,9 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { setEnrollment, enrollCourse, unenrollCourse } from "../Enrollments/reducer";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import * as enrollmentsClient from "../Enrollments/client";
+
 
 
 export default function Dashboard({ courses, 
@@ -8,19 +11,46 @@ export default function Dashboard({ courses,
   setCourse, 
   addNewCourse,
   deleteCourse, 
-  updateCourse }: {
-  courses: any[]; course: any; setCourse: (course: any) => void;
-  addNewCourse: () => void; deleteCourse: (course: any) => void;
+  updateCourse,
+ }: {
+  courses: any[]; 
+  course: any; 
+  setCourse: (course: any) => void;
+  addNewCourse: () => void; 
+  deleteCourse: (course: any) => void;
   updateCourse: () => void; 
 }) {
-   
+    console.log("in Dashboard...");
+
+    console.log("courses...");
+    console.log(courses);
+    
+    const dispatch = useDispatch();
+
+
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
   
     const isFaculty = currentUser.role === "FACULTY";
     const isStudent = currentUser.role === "STUDENT";
 
-   
+    console.log("current user id: ");
+    console.log(currentUser._id);
+    console.log("enrollments : " );
+    console.log(enrollments);
+
+    const fetchEnrollments = async () => {
+      console.log("in fetchEnrollments ...", currentUser._id );
+      const enrollments = await enrollmentsClient.getEnrollmentsForUser(currentUser._id as string);
+
+      console.log(enrollments);
+      
+      dispatch(setEnrollment(enrollments));
+    };
+    useEffect(() => {
+      fetchEnrollments();
+    }, []);
+
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />

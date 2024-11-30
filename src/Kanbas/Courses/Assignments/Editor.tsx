@@ -79,7 +79,7 @@ export default function AssignmentEditor() {
         try {
           // dispatch(updateAssignment(assignmentData));
           saveAssignment(assignmentData);
-          console.log("Assignment updated:", assignmentData);
+          //console.log("Assignment updated:", assignmentData);
         } catch (error) {
           console.error("Error updating assignment:", error);
         }
@@ -88,7 +88,7 @@ export default function AssignmentEditor() {
         try {
           dispatch(addAssignment(assignmentData));
           // createAssignmentForCourse(assignmentData)
-          console.log("New assignment created:", assignmentData);
+         // console.log("New assignment created:", assignmentData);
         } catch (error) {
           console.error("Error creating assignment:", error);
         }
