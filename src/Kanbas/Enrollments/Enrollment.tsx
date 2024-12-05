@@ -84,7 +84,7 @@ export default function Enroll({ courses }: { courses: any[] }) {
             <h1 id="wd-dashboard-title">Dashboard</h1>
             <hr />
             <h2 id="wd-dashboard-published">
-                Published Courses 2 ({courses.length})
+                Published Courses ({courses.length})
             </h2>
 
             <div id="wd-dashboard-courses" className="row">

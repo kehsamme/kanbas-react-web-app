@@ -7,18 +7,24 @@ import * as enrollmentsClient from "../Enrollments/client";
 
 
 export default function Dashboard({ courses, 
-  course, 
+  course,
   setCourse, 
   addNewCourse,
   deleteCourse, 
   updateCourse,
+  enrolling,
+  setEnrolling,
+  updateEnrollment
  }: {
   courses: any[]; 
   course: any; 
   setCourse: (course: any) => void;
   addNewCourse: () => void; 
   deleteCourse: (course: any) => void;
-  updateCourse: () => void; 
+  updateCourse: () => void;
+  enrolling: boolean; 
+  setEnrolling: (enrolling: boolean) => void;
+  updateEnrollment: (courseId: string, enrolled: boolean) => void
 }) {
     console.log("in Dashboard...");
 
@@ -29,31 +35,17 @@ export default function Dashboard({ courses,
 
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
   
     const isFaculty = currentUser.role === "FACULTY";
     const isStudent = currentUser.role === "STUDENT";
 
-    console.log("current user id: ");
-    console.log(currentUser._id);
-    console.log("enrollments : " );
-    console.log(enrollments);
-
-    const fetchEnrollments = async () => {
-      console.log("in fetchEnrollments ...", currentUser._id );
-      const enrollments = await enrollmentsClient.getEnrollmentsForUser(currentUser._id as string);
-
-      console.log(enrollments);
-      
-      dispatch(setEnrollment(enrollments));
-    };
-    useEffect(() => {
-      fetchEnrollments();
-    }, []);
-
   return (
     <div id="wd-dashboard">
-      <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+      <h1 id="wd-dashboard-title">Dashboard
+      <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+          {enrolling ? "My Courses" : "All Courses"}
+        </button>
+      </h1> <hr />
       {isFaculty && (
         <>
       <h5>New Course
@@ -73,7 +65,7 @@ export default function Dashboard({ courses,
             onChange={(e) => setCourse({ ...course, description: e.target.value }) }/>
       <hr />
       </> )}
-      {isStudent && (
+      {/* {isStudent && (
           <Link
               to={`/Kanbas/Enrollment`}
               className="text-decoration-none text-black"
@@ -81,20 +73,12 @@ export default function Dashboard({ courses,
               <button className="btn btn-primary float-end"
                       id="wd-add-new-course-click"> Enrollments </button>
           </Link>
-      )}
+      )} */}
 
-      <h2 id="wd-dashboard-published">Published Courses 1 ({courses.length})</h2> <hr />
+      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
         {courses
-              .filter((course) => {
-                for (let i = 0; i < enrollments.length; i++) {
-                    if (enrollments[i].user === currentUser._id && enrollments[i].course === course._id) {
-                        return true;
-                    }
-                }
-                return false;
-            })
               .map((course) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden">
@@ -103,6 +87,15 @@ export default function Dashboard({ courses,
                   <img src={`/images/${course.image}`} width="100%" height={160} />
                   <div className="card-body">
                     <h5 className="wd-dashboard-course-title card-title">
+                      {enrolling && (
+                        <button onClick={(event) => {
+                            event.preventDefault();
+                            updateEnrollment(course._id, !course.enrolled);
+                          }}
+                            className={`btn ${ course.enrolled ? "btn-danger" : "btn-success" } float-end`} >
+                            {course.enrolled ? "Unenroll" : "Enroll"}
+                        </button>
+                      )}
                       {course.name} </h5>
                     <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
                       {course.description} </p>
@@ -137,12 +130,3 @@ export default function Dashboard({ courses,
       </div>
 
   );}
-
-//   .filter((course) => {
-//     for (let i = 0; i < enrollments.length; i++) {
-//         if (enrollments[i].user === currentUser._id && enrollments[i].course === course._id) {
-//             return true;
-//         }
-//     }
-//     return false;
-// })
