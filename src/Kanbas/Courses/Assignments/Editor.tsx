@@ -5,25 +5,33 @@ import { Link } from "react-router-dom";
 import {IoCalendarOutline} from "react-icons/io5";
 import {useLocation, useNavigate, useParams} from "react-router";
 import { assignments } from "../../Database";
-import {useDispatch} from "react-redux";
-import {addAssignment, updateAssignment} from "./reducer";
+import {useDispatch, useSelector} from "react-redux";
+import {addAssignment, updateAssignment, deleteAssignment, setAssignments} from "./reducer";
 import * as assignmentsClient from "./client";
-// import {generateAssignmentID} from "./AssignmentIdGenerator";
+import * as coursesClient from "../client";
 
 export default function AssignmentEditor() {
-    // const { aid } = useParams();
-    // const assignments = db.assignments;
     const { cid, aid } = useParams();
-    const assignment = assignments.find((assignment) => assignment._id === aid);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+
+    const fetchAssignments = async () => {
+      const modules = await coursesClient.findAssignmentForCourse(cid as string);
+      dispatch(setAssignments(modules));
+    };
+    useEffect(() => {
+      fetchAssignments();
+    }, []);
+
+    useEffect(() => {
+      console.log(assignments, assignments.filter((assignment: { _id: string, title: string, course: string }) => assignment._id === aid))
+      const newAssignment = assignments.filter((assignment: { _id: string, title: string, course: string }) => assignment._id === aid)[0]
+      setAssignment(newAssignment)
+    }, [assignments]);
 
     // Initialize state with assignment values
-    const [title, setTitle] = useState(assignment?.title || "");
-    const [description, setDescription] = useState(assignment?.description || "");
-    const [points, setPoints] = useState(assignment?.points || 0);
-    const [due, setdue] = useState(assignment?.due || "");
-    const [available, setavailable] = useState(assignment?.availability || "");
+    const [assignment, setAssignment] = useState(assignments.filter((assignment: { _id: string, title: string, course: string }) => assignment._id === aid))
     // const newID = generateAssignmentID(cid, 1, assignments);
     const { pathname } = useLocation();
 
@@ -59,18 +67,18 @@ export default function AssignmentEditor() {
     // };
 
     const handleSave = async () => {
-      if (!title || !points || !due || !available) {
+      if (!assignment.title || !assignment.points || !assignment.due || !assignment.availability) {
         alert("Please fill in all required fields.");
         return;
       }
     
       const assignmentData = {
         _id: aid || `A${assignments.length + 1}`, // Generate a new ID if creating
-        title,
-        description,
-        points,
-        due: new Date(due).toISOString().split("T")[0],
-        availability: new Date(available).toISOString().split("T")[0],
+        title: assignment.title,
+        description: assignment.description,
+        points: assignment.points,
+        due: new Date(assignment.due).toISOString().split("T")[0],
+        availability: new Date(assignment.availability).toISOString().split("T")[0],
         course: cid,
       };
     
@@ -139,20 +147,16 @@ export default function AssignmentEditor() {
     //   }
     // };
     
-    
     return (
-      <div>
-        {assignments
-          .filter((assignment: any) => assignment._id === aid)
-          .map((assignment: any) => (
       <div id="wd-assignments-editor">
         
         <form key={aid}>
         <div className="col-12 container">
         <label>Assignment Name</label> <br/>
         <div className="mb-3">
-        <input className="form-control" id="wd-name" value={title} onChange={(e) => setTitle(e.target.value)} /><br /><br />
-        <textarea className="form-control" id="wd-description" cols={50} rows={10} value={description} onChange={(e) => setDescription(e.target.value)} />
+        <input className="form-control" id="wd-name" value={assignment.title} onChange={(e) => {
+          setAssignment({...assignment, title: e.target.value})}} /><br /><br />
+        <textarea className="form-control" id="wd-description" cols={50} rows={10} value={assignment.description} onChange={(e) => setAssignment({...assignment, description: e.target.value})} />
          {/* {assignment.description}
         </textarea> */}
         </div>
@@ -160,7 +164,7 @@ export default function AssignmentEditor() {
         <div className="row">
           <div className="col-2">Points</div>
               <div className="col-6">
-                <input id="wd-points" className="form-control" value={points} onChange={(e) => setPoints(Number(e.target.value))} />
+                <input id="wd-points" className="form-control" value={assignment.points} onChange={(e) => setAssignment({...assignment, points: e.target.value})} />
           </div>
 
           <br /><br />
@@ -239,20 +243,20 @@ export default function AssignmentEditor() {
                 <label htmlFor="wd-due-date"> Due </label> <br/>
                 <input className="form-control" type="date"
                 id="wd-due-date"
-                value={due} onChange={(e) => setdue(e.target.value)}/>
+                value={assignment.due} onChange={(e) => setAssignment({...assignment, due: e.target.value})}/>
                 <br />
                 <div className="row">
                   <div className="col-6">
                 <label htmlFor="wd-available-from"> Available from </label> <br/>
                 <input className="form-control" type="date"
                 id="wd-available-from"
-                value={available} onChange={(e) => setavailable(e.target.value)}/>
+                value={assignment.availability} onChange={(e) => setAssignment({...assignment, availability: e.target.value})}/>
                 </div>
                 <div className="col-6">
                 <label htmlFor="wd-available-until"> Until </label> <br/>
                 <input className="form-control" type="date"
                 id="wd-available-until"
-                value={due}/> 
+                value={assignment.due}/> 
               </div>
             </div>
             </div>
@@ -276,7 +280,6 @@ export default function AssignmentEditor() {
               </div>
             </div>
           </div>
-    ))} </div> 
   );
 }
   

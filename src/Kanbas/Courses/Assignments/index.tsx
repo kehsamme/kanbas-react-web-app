@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import * as assignmentsClient from "./client";
 import * as coursesClient from "../client";
-import { addAssignment, deleteAssignment, updateAssignment, editAssignment, setAssignment  } from "./reducer";
+import { addAssignment, deleteAssignment, updateAssignment, editAssignment, setAssignments  } from "./reducer";
 
 
 
@@ -48,7 +48,7 @@ export default function Assignments() {
     const fetchAssignments = async () => {
       console.log("in fetchAssignments...");
       const assignments = await coursesClient.findAssignmentForCourse(cid as string);
-      dispatch(setAssignment(assignments));
+      dispatch(setAssignments(assignments));
     };
     useEffect(() => {
       fetchAssignments();

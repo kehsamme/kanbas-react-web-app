@@ -21,7 +21,9 @@ import QuizIndivButtons from "./QuizIndivButtons";
 export default function Quizzes() {
     // const { qid } = useParams();
     const { cid } = useParams();
-    const {quizzes} = useSelector((state: any) => state.quizReducer);
+    // const {quizzes} = useSelector((state: any) => state.quizReducer);
+    const [quizzes, setQuizzes] = useState<any[]>([]);
+
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
 
@@ -29,19 +31,22 @@ export default function Quizzes() {
     const removeQuiz = async ( quizId: string) => {
         console.log("in remove quiz...");
         await quizzesClient.deleteQuiz(quizId);
-        dispatch(deleteQuiz(quizId));
+        deleteQuiz(quizId);
       };
     
       const fetchQuizzes = async () => {
+        if(cid) {
         console.log("in fetchQuizzes...", cid);
-        const assignments = await coursesClient.findQuizForCourse(cid as string);
-        dispatch(setQuiz(quizzes));
-      };
+            const quizzes = await coursesClient.findQuizForCourse(cid);
+            setQuizzes(quizzes);
+        }
+    }
+
+
       useEffect(() => {
         fetchQuizzes();
-      }, []);
+      }, [cid]);
     
-      
 
     return (
 

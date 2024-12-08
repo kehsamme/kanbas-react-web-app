@@ -6,7 +6,6 @@ export const USERS_API = `${REMOTE_SERVER}/api/users`;
 
 export const findCoursesForUser = async (userId: string) => {
   const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/courses`);
-  console.log("client find courses for user", response.data)
   return response.data;
 };
 

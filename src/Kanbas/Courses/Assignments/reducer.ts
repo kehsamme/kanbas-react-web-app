@@ -7,14 +7,14 @@ const assignmentsSlice = createSlice({
   name: "assignments",
   initialState,
   reducers: {
-    setAssignment: (state, action) => {
+    setAssignments: (state, action) => {
       state.assignments = action.payload;
     },
     addAssignment: (state, { payload: assignment }) => {
       console.log("Payload received in addAssignment:", assignment);
 
       const newAssignment: any = {
-        _id: new Date().getTime().toString(),
+        _id: assignment._id,
         title: assignment.title,
         availability: assignment.availability,
         due: assignment.due,
@@ -35,7 +35,7 @@ const assignmentsSlice = createSlice({
           ? {
               ...assignment,
               ...updatedAssignment,
-              available: new Date(updatedAssignment.available)
+              available: new Date(updatedAssignment.availability)
                 .toISOString()
                 .split("T")[0],
               due: new Date(updatedAssignment.due).toISOString().split("T")[0],
@@ -51,6 +51,6 @@ const assignmentsSlice = createSlice({
     },
   },
 });
-export const { addAssignment, deleteAssignment, updateAssignment, editAssignment, setAssignment } =
+export const { addAssignment, deleteAssignment, updateAssignment, editAssignment, setAssignments } =
   assignmentsSlice.actions;
 export default assignmentsSlice.reducer;
