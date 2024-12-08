@@ -31,6 +31,43 @@ export const createCourse = async (course: any) => {
   const { data } = await axiosWithCredentials.post(COURSES_API, course);
   return data;
  };
+
+ // ASSIGNMENT
+ export const createAssignmentForCourse = async (courseId: string, assignment: any) => {
+  const response = await axiosWithCredentials.post(
+    `${COURSES_API}/${courseId}/assignments`,
+    assignment
+  );
+  console.log("in create assignment for course", assignment)
+  return response.data;
+ };
+
+export const findAssignmentForCourse = async (courseId: string) => {
+const response = await axiosWithCredentials
+  .get(`${COURSES_API}/${courseId}/assignments`);
+return response.data;
+};
+
+export const fetchAllAssignments= async () => {
+const { data } = await axiosWithCredentials.get(`${COURSES_API}/assignments`);
+return data;
+};
+
+// Quizzes
+export const createQuizForCourse = async (courseId: string, quiz: any) => {
+const response = await axiosWithCredentials.post(
+  `${COURSES_API}/${courseId}/quizzes`,
+  quiz
+);
+return response.data;
+};
+
+export const findQuizForCourse = async (courseId: string) => {
+console.log("client find quiz for course", courseId);
+const response = await axiosWithCredentials
+    .get(`${COURSES_API}/${courseId}/quizzes`);
+return response.data;
+};
  
 // export const createAssignmentForCourse = async (courseId: string, assignment: any) => {
 //   console.log("in create assignment client...");

@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addAssignment, updateAssignment } from "./reducer";
 import * as assignmentsClient from "./client";
+import * as coursesClient from "../client";
 import { useParams } from "react-router";
 
 
@@ -19,14 +20,14 @@ export default function AssignmentEditor_22({
   }) {
     const { cid } = useParams();
     
-    const createAssignmentForCourse = async (assignment_1: any) => {
+    const createAssignmentForCourse = async (cid: any, assignment_1: any) => {
      // console.log("in createAssignmentForCourse ...");
       //console.log("New assignment_1", assignment_1)
 
       if (!cid) return;
       //console.log("New assignment: ", assignment_1)
       // const newAssignment = { name: assignmentName, course: cid };
-      const assignment = await assignmentsClient.createAssignmentForCourse(assignment_1);
+      const assignment = await coursesClient.createAssignmentForCourse(cid, assignment_1);
       //console.log("New Assignment return from api call:", assignment); // Debug Redux update
       dispatch(addAssignment(assignment));
     };
@@ -73,7 +74,7 @@ export default function AssignmentEditor_22({
   
     //console.log("handleSave Assignment Data??:", newAssignment);
   
-    createAssignmentForCourse(newAssignment); // Log output here
+    createAssignmentForCourse(cid, newAssignment); // Log output here
     //console.log("Assignment handle saved:", newAssignment);
   
     onClose();

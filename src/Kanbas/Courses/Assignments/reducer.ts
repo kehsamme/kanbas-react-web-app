@@ -11,6 +11,8 @@ const assignmentsSlice = createSlice({
       state.assignments = action.payload;
     },
     addAssignment: (state, { payload: assignment }) => {
+      console.log("Payload received in addAssignment:", assignment);
+
       const newAssignment: any = {
         _id: new Date().getTime().toString(),
         title: assignment.title,

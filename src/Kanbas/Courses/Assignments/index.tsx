@@ -25,6 +25,14 @@ export default function Assignments() {
     const isFaculty = currentUser.role === "FACULTY";      
     const dispatch = useDispatch();
 
+    // const createUser = async () => {
+    //   const assignment = await coursesClient.createAssignmentForCourse(cid, {
+    //     title: "New",
+    //     course: `newuser${Date.now()}`,
+    //   });
+    //   setAssignment([...assignments, assignment]);
+    // };
+
     // const saveAssignment = async (module: any) => {
     //   await assignmentsClient.updateAssignment(module);
     //   dispatch(updateAssignment(module));
@@ -35,17 +43,16 @@ export default function Assignments() {
       //console.log("in remove assignment...");
       await assignmentsClient.deleteAssignment(assignmentId);
       dispatch(deleteAssignment(assignmentId));
-    };
+    }; 
   
     const fetchAssignments = async () => {
-      //console.log("in fetchAssignments...");
-      const assignments = await assignmentsClient.findAssignmentForCourse(cid as string);
+      console.log("in fetchAssignments...");
+      const assignments = await coursesClient.findAssignmentForCourse(cid as string);
       dispatch(setAssignment(assignments));
     };
     useEffect(() => {
       fetchAssignments();
     }, []);
-  
     
 
     return (
