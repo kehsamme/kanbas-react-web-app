@@ -27,7 +27,7 @@ export default function QuizEditor() {
       }, []);
     
     useEffect(() => {
-        console.log(quizzes, quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid))
+        console.log("in editor",quizzes, quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid))
         const newQuiz = quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid)[0] ?? {
             title: "",
             description: "",
@@ -414,20 +414,20 @@ export default function QuizEditor() {
             </div>
 
             <div className="mb-3">
-                <label htmlFor="wd-due-date" className="form-label">Due Date</label>
-                <input type="date" id="wd-due-date" className="form-control" value={quiz?.dueDate} onChange={(e) =>
+                <label htmlFor="wd-due-date" className="form-label">Due Date </label>
+                <input type="date" id="wd-due-date" className="form-control" value={quiz?.dueDate.split('T')[0]} onChange={(e) =>
                     setQuiz({ ...quiz, dueDate: e.target.value })}/>
             </div>
 
             <div className="mb-3">
                 <label htmlFor="wd-available-date" className="form-label">Available From</label>
-                <input type="date" id="wd-available-date" className="form-control" value={quiz?.availableFromDate} onChange={(e) =>
+                <input type="date" id="wd-available-date" className="form-control" value={quiz?.availableFromDate.split('T')[0]} onChange={(e) =>
                     setQuiz({ ...quiz, availableFromDate: e.target.value })}/>
             </div>
 
             <div className="mb-3">
                 <label htmlFor="wd-until-date" className="form-label">Until</label>
-                <input type="date" id="wd-until-date" className="form-control" value={quiz?.availableUntilDate} onChange={(e) =>
+                <input type="date" id="wd-until-date" className="form-control" value={quiz?.availableUntilDate.split('T')[0]} onChange={(e) =>
                     setQuiz({ ...quiz, availableUntilDate: e.target.value })}/>
             </div>
 
