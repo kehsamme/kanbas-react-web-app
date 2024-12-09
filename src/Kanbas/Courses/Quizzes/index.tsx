@@ -21,24 +21,24 @@ import QuizIndivButtons from "./QuizIndivButtons";
 export default function Quizzes() {
     // const { qid } = useParams();
     const { cid } = useParams();
-    // const {quizzes} = useSelector((state: any) => state.quizReducer);
-    const [quizzes, setQuizzes] = useState<any[]>([]);
+    const {quizzes} = useSelector((state: any) => state.quizReducer);
+    // const [quizzes, setQuizzes] = useState<any[]>([]);
 
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
 
    
     const removeQuiz = async ( quizId: string) => {
-        console.log("in remove quiz...");
+        console.log("in remove quiz...", );
         await quizzesClient.deleteQuiz(quizId);
-        deleteQuiz(quizId);
+        dispatch(deleteQuiz(quizId));
       };
     
       const fetchQuizzes = async () => {
         if(cid) {
-        console.log("in fetchQuizzes...", cid);
+        console.log("in fetchQuizzes quizzes.index...", cid);
             const quizzes = await coursesClient.findQuizForCourse(cid);
-            setQuizzes(quizzes);
+            dispatch(setQuizzes(quizzes));
         }
     }
 
@@ -99,7 +99,8 @@ export default function Quizzes() {
 
                                     {currentUser.role === "FACULTY" ? (
                                         <QuizIndivButtons quizId={quiz._id}
-                                                          deleteQuiz={removeQuiz} 
+                                                          deleteQuiz={(quizId) => removeQuiz(quizId)}
+                                                        //   deleteQuiz={removeQuiz} 
                                                           courseId = {quiz.course}/>
                                     ) : (
                                         <LessonControlButtons/>
@@ -109,12 +110,12 @@ export default function Quizzes() {
 
                                 <ul className="ms-4 text-wrap txt-caption list-unstyled">
                                     <li>
-                                        <span className="fw-bold">Available:</span> {new Date(quiz.available_date + 'T00:00:00').toLocaleDateString('en-US', {
+                                        <span className="fw-bold">Available: </span> {new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
                                         year: 'numeric',
                                         month: 'short',
                                         day: 'numeric',
                                     })} at 12:00pm |{" "}
-                                        <span className="fw-bold">Due:</span> {new Date(quiz.due_date + 'T23:59:59').toLocaleDateString('en-US', {
+                                        <span className="fw-bold">Due:</span> {new Date(quiz.dueDate).toLocaleDateString('en-US', {
                                         year: 'numeric',
                                         month: 'short',
                                         day: 'numeric',

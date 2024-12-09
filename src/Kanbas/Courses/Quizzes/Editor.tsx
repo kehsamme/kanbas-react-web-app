@@ -115,9 +115,9 @@ export default function QuizEditor() {
     const [viewResult, setViewResult] = useState(false); // Boolean
 
 
-    const saveQuiz = async (module: any) => {
-        await quizzesClient.updateQuiz(module);
-        dispatch(updateQuiz(module));
+    const saveQuiz = async (quiz: any) => {
+        await quizzesClient.updateQuiz(quiz);
+        dispatch(updateQuiz(quiz));
       };
 
     const createQuizForCourse = async (cid: any, quiz_1: any) => {
@@ -204,9 +204,9 @@ export default function QuizEditor() {
             type: type,
             points: Number(points),
             number: `Q${quizzes.length + 1}`,
-            dueDate: dueDate, // Ensure `dueDate` is properly formatted
-            availableFromDate: availableFromDate, // Ensure it is properly formatted
-            availableUntilDate: availableUntilDate, // Ensure it is properly formatted
+            dueDate: new Date(quiz.dueDate).toISOString().split("T")[0], // Ensure `dueDate` is properly formatted
+            availableFromDate: new Date(quiz.availableFromDate).toISOString().split("T")[0], // Ensure it is properly formatted
+            availableUntilDate: new Date(quiz.availableUntilDate).toISOString().split("T")[0], // Ensure it is properly formatted
             courseId: cid,
             questionNumber: Number(questionNumber),
             published: Boolean(published), // Convert to boolean if necessary

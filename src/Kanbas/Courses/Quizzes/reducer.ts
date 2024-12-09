@@ -29,6 +29,7 @@ const quizzesSlice = createSlice({
     initialState,
     reducers: {
         setQuizzes: (state, action) => {
+          console.log(action.payload, "in set quiz reducer");
           state.quizzes = action.payload;
         },
         addQuiz: (state, { payload: quiz }) => {
@@ -60,32 +61,9 @@ const quizzesSlice = createSlice({
           
           state.quizzes = [...state.quizzes, newQuiz] as any;
         },
-        // addQuiz: (state, { payload: quiz }) => {
-        //     console.log("Payload received in addQuiz:", quiz);
-
-        //     const newQuiz: any = {
-        //         _id: new Date().getTime().toString(),
-        //         title: quiz.title,
-        //         description: quiz.title,
-        //         points: quiz.points,
-        //         assigned_group: quiz.assigned_group,
-        //         type: quiz.type,
-        //         shuffle: quiz.shuffle,
-        //         time: quiz.time,
-        //         multipleAttempts: quiz.multipleAttempts,
-        //         showAns: quiz.showAns,
-        //         accessCode: quiz.accessCode,
-        //         oneAtATime: quiz.oneAtATime,
-        //         webcam: quiz.accessCode,
-        //         lock: quiz.lock,
-        //         due_date: quiz.due_date,
-        //         until_date: quiz.until_date,
-        //         available_date: quiz.available_date,
-        //         // course: quiz.course,
-        //     };
-        //       state.quizzes = [...state.quizzes, newQuiz] as any;
-        // },
+        
         deleteQuiz: (state, { payload: quizId }) => {
+          console.log("in reducer delete quiz...", quizId );
             state.quizzes = state.quizzes.filter(
                 (a: any) => a._id !== quizId);
         },
@@ -99,18 +77,19 @@ const quizzesSlice = createSlice({
         //   });
         // },
         updateQuiz: (state, { payload: updatedQuiz }) => {
+          console.log("in update reducer", updatedQuiz);
           state.quizzes = state.quizzes.map((quiz: any) =>
             quiz._id === updatedQuiz._id
               ? {
                   ...quiz,
                   ...updatedQuiz,
-                  available: new Date(updatedQuiz.availableFromDate)
-                    .toISOString()
-                    .split("T")[0],
-                  until: new Date(updatedQuiz.availableUntilDate)
-                  .toISOString()
-                  .split("T")[0],
-                  due: new Date(updatedQuiz.dueDate).toISOString().split("T")[0],
+                  // available: new Date(updatedQuiz.availableFromDate)
+                  //   .toISOString()
+                  //   .split("T")[0],
+                  // until: new Date(updatedQuiz.availableUntilDate)
+                  // .toISOString()
+                  // .split("T")[0],
+                  // due: new Date(updatedQuiz.dueDate).toISOString().split("T")[0],
                 }
               : quiz
           ) as any;
