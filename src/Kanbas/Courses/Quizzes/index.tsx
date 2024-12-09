@@ -13,7 +13,7 @@ import * as db from "../../Database";
 import * as quizzesClient from "./client";
 import * as coursesClient from "../client";
 
-import { addQuiz, deleteQuiz, updateQuiz, setQuiz } from "./reducer";
+import { addQuiz, deleteQuiz, updateQuiz, setQuizzes } from "./reducer";
 
 import QuizIndivButtons from "./QuizIndivButtons";
 
@@ -47,6 +47,7 @@ export default function Quizzes() {
         fetchQuizzes();
       }, [cid]);
     
+      console.log(quizzes)
 
     return (
 
@@ -78,7 +79,8 @@ export default function Quizzes() {
                                         <AssignmentPrefixButtons />
                                         {/* {currentUser.role === "FACULTY" ? ( */}
                                             <Link
-                                                to={`/Kanbas/Courses/${cid}/Quizzes/Detail/${quiz._id}`}
+                                                // to={`/Kanbas/Courses/${cid}/Quizzes/Detail/${quiz._id}`}
+                                                to={`/Kanbas/Courses/${cid}/Quizzes/Editor/${quiz._id}`}
                                                 className="text-decoration-none text-black"
                                             >
                                                 <span className="ms-2 text-start">{quiz.title}</span>

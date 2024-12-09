@@ -14,7 +14,7 @@ const assignmentsSlice = createSlice({
       console.log("Payload received in addAssignment:", assignment);
 
       const newAssignment: any = {
-        _id: assignment._id,
+        _id: assignment,
         title: assignment.title,
         availability: assignment.availability,
         due: assignment.due,

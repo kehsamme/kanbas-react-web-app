@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { setQuiz } from "./reducer"; 
-import { quizzes } from "../../Database";
+import { useState } from 'react';
+import { setQuizzes } from "./reducer"; 
+// import { quizzes } from "../../Database";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -10,8 +11,10 @@ export default function QuizDetails() {
     const { cid, qid } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const quiz = useSelector((state: any) => state.quizReducer.quiz);
+    const quizzes = useSelector((state: any) => state.quizReducer.quiz);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const [quiz, setQuiz] = useState(quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid))
+
 
     // const quizzes = useSelector((state: any) => state.quizReducer.quizzes); 
     const defaultQuiz = {
@@ -36,11 +39,11 @@ export default function QuizDetails() {
     const { pathname } = useLocation();
     useEffect(() => {
         if (pathname.includes("Editor")) {
-            dispatch(setQuiz(defaultQuiz))
+            dispatch(setQuizzes(defaultQuiz))
         } else {
-            const existingQuiz = quizzes.find((q) => q._id === qid);
+            const existingQuiz = quizzes.find((q: any) => q._id === qid);
             if (existingQuiz) {
-                dispatch(setQuiz(existingQuiz));
+                dispatch(setQuizzes(existingQuiz));
             }
         }
     }, [qid, quiz, dispatch, navigate, cid]);

@@ -71,7 +71,8 @@ export default function AssignmentEditor() {
         alert("Please fill in all required fields.");
         return;
       }
-    
+      console.log("testing date", assignment.dueDate, assignment.availableFromDate, assignment.availableToDate)
+
       const assignmentData = {
         _id: aid || `A${assignments.length + 1}`, // Generate a new ID if creating
         title: assignment.title,
@@ -81,7 +82,8 @@ export default function AssignmentEditor() {
         availability: new Date(assignment.availability).toISOString().split("T")[0],
         course: cid,
       };
-    
+      console.log("testing date assignment", assignment.availability)
+
       if (aid) {
         // If aid exists, update the assignment
         try {
