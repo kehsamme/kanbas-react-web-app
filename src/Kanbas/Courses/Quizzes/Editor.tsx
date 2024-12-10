@@ -8,6 +8,7 @@ import {addQuiz, setQuizzes, updateQuiz} from "./reducer";
 import {addAssignment} from "../Assignments/reducer";
 import * as coursesClient from "../client";
 import * as quizzesClient from "./client";
+import { Link } from 'react-router-dom';
 
 
 
@@ -39,6 +40,7 @@ export default function QuizEditor() {
             shuffleAnswers: false,
             timelimit: 0,
             multipleAttempts: false,
+            numAttempts: 1,
             showAnswers: "Never",
             accessCode: "",
             oneQuestionataTime: false,
@@ -67,6 +69,7 @@ export default function QuizEditor() {
         shuffleAnswers: false,
         timelimit: 0,
         multipleAttempts: false,
+        numAttempts: 1,
         showAnswers: "Never",
         accessCode: "",
         oneQuestionataTime: false,
@@ -105,6 +108,7 @@ export default function QuizEditor() {
     const [shuffleAnswers, setShuffleAnswers] = useState(false); // Boolean
     const [timeLimit, setTimeLimit] = useState(""); // Time limit in minutes
     const [multipleAttempts, setMultipleAttempts] = useState(false); // Boolean
+    const [numAttempts, setNumAttempts] = useState(false); // Boolean
     const [showAnswers, setShowAnswers] = useState(""); // When answers are shown
     const [accessCode, setAccessCode] = useState(""); // Optional code for accessing the quiz
     const [oneQuestionataTime, setOneQuestionAtATime] = useState(false); // Boolean
@@ -159,46 +163,12 @@ export default function QuizEditor() {
             shuffleAnswers: quiz.shuffleAnswers,
             timeLimit: quiz.timelimit,
             multipleAttempts: quiz.multipleAttempts,
+            numAttempts: quiz.numAttempts,
             showAnswers: quiz.showAnswers || "Never",
             responses: quiz.responses || "Never",
             published: quiz.published || false,
           };
           
-        // const quizData = {
-        //     _id: qid || `${quizzes.length + 1}`, // Include _id only if it's an update
-        //     number: quiz.number || `Q${quizzes.length + 1}`, // Generate a number if not provided
-        //     courseId: quiz.courseId,
-        //     title: quiz.title,
-        //     type: quiz.type,
-        //     points: quiz.points,
-        //     questionNumber: quiz.questionNumber || 0,
-        //     published: quiz.published || false,
-        //     group: quiz.group || "Quizzes",
-        //     shuffleAnswers: quiz.shuffleAnswers || false,
-        //     timelimit: quiz.timelimit || 0,
-        //     multipleAttempts: quiz.multipleAttempts || false,
-        //     showAnswers: quiz.showAnswers || "Never",
-        //     accessCode: quiz.accessCode || "",
-        //     oneQuestionataTime: quiz.oneQuestionataTime || false,
-        //     webCam: quiz.webCam || false,
-        //     lockQuestion: quiz.lockQuestion || false,
-        //     // dueDate: new Date(quiz.dueDate).toISOString().split("T")[0],
-        //     // availableFromDate: new Date(quiz.availableFromDate).toISOString().split("T")[0],
-        //     // availableUntilDate: new Date(quiz.availableUntilDate).toISOString().split("T")[0],
-        //     dueDate: quiz.dueDate
-        //     ? new Date(quiz.dueDate).toISOString().split("T")[0]
-        //     : "",
-        //     availableFromDate: quiz.availableFromDate
-        //     ? new Date(quiz.availableFromDate).toISOString().split("T")[0]
-        //     : "",
-        //     availableUntilDate: quiz.availableUntilDate
-        //     ? new Date(quiz.availableUntilDate).toISOString().split("T")[0]
-        //     : "",
-        //     responses: quiz.responses || "Never",
-        //     viewResult: quiz.viewResult || false,
-        // };
-        // console.log("testing date quiz", quiz.dueDate, quiz.availableFromDate, quiz.availableToDate)
-        
         const newQuiz = {
             title: title,
             type: type,
@@ -214,6 +184,7 @@ export default function QuizEditor() {
             shuffleAnswers: Boolean(shuffleAnswers), // Convert to boolean if necessary
             timelimit: Number(timeLimit), // Convert to number if necessary
             multipleAttempts: Boolean(multipleAttempts), // Convert to boolean if necessary
+            numAttempts: Number(numAttempts),
             showAnswers: showAnswers,
             accessCode: accessCode || "", // Default to empty string if not provided
             oneQuestionataTime: Boolean(oneQuestionataTime), // Convert to boolean
@@ -245,7 +216,7 @@ export default function QuizEditor() {
         }
       
         // Navigate back to assignments list
-        navigate(`/Kanbas/Courses/${cid}/Quizzes`);
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/Detail/${qid}`);
       };
 
     // // OLD STUFF IGNORE
@@ -305,8 +276,16 @@ export default function QuizEditor() {
 
     return (
         <div className="container mt-4" id="wd-quizzes-editor">
-            <h2>Edit Quiz</h2>
-
+            <ul className="nav nav-tabs">
+            <li className="nav-item">
+                <Link className="nav-link active" to={`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor/${qid}`}>Details</Link>
+                {/* <a className="nav-link active" href="#">Details</a> */}
+            </li>
+            <li className="nav-item">
+                {/* <a className="nav-link" href="#">Questions</a> */}
+                <Link className="nav-link" to={`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor/Questions/${qid}`}>Questions</Link>
+            </li>
+        </ul>
             <div className="mb-3">
                 <label htmlFor="wd-name" className="form-label">Quiz Name</label>
                 <input type="text" className="form-control" value={quiz?.title} placeholder="Quiz Name"
@@ -351,8 +330,8 @@ export default function QuizEditor() {
                 <label htmlFor="wd-shuffle" className="form-label">Shuffle Answers</label>
                 <select id="wd-shuffle" className="form-select" value={quiz.shuffleAnswers ? "Yes" : "No"} onChange={(e) =>
                     setQuiz({ ...quiz, shuffleAnswers: e.target.value === "Yes"})}>
-                    <option>Yes</option>
-                    <option>No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </select>
             </div>
 
@@ -364,19 +343,37 @@ export default function QuizEditor() {
 
             <div className="mb-3">
                 <label htmlFor="wd-multiple-attempts" className="form-label">Allow Multiple Attempts</label>
-                <select id="wd-multiple-attempts" className="form-select" value={quiz?.multipleAttempts ? 'Yes' : 'No'} onChange={(e) =>
-                    setQuiz({ ...quiz, multipleAttempts: e.target.value === 'Yes' })}>
-                    <option>No</option>
-                    <option>Yes</option>
+                <select id="wd-multiple-attempts" className="form-select" value={quiz.multipleAttempts ? "Yes" : "No"} onChange={(e) =>
+                    setQuiz({ ...quiz, multipleAttempts: e.target.value === "Yes" })}>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
                 </select>
             </div>
+           
+            <div className="mb-3">
+                <label htmlFor="wd-points" className="form-label">Attempts</label>
+                <input 
+                    type="number" 
+                    id="wd-points" 
+                    className="form-control" 
+                    value={quiz?.numAttempts} 
+                    onChange={(e) => setQuiz({ ...quiz, numAttempts: Number(e.target.value) })}
+                    disabled={!quiz?.multipleAttempts}  // Disable input if multipleAttempts is false
+                />
+            </div>
+
+            {/* <div className="mb-3">
+                <label htmlFor="wd-points" className="form-label">Attempts</label>
+                <input type="number" id="wd-points" className="form-control" value={quiz?.numAttempts} onChange={(e) =>
+                    setQuiz({ ...quiz, numAttempts: Number(e.target.value) })}/>
+            </div> */}
 
             <div className="mb-3">
                 <label htmlFor="wd-show-answers" className="form-label">Show Correct Answers</label>
                 <select id="wd-show-answers" className="form-select" value={quiz?.showAnswers} onChange={(e) =>
                     setQuiz({ ...quiz, showAnswers: e.target.value })}>
-                    <option>Yes</option>
-                    <option>No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </select>
             </div>
 
@@ -390,8 +387,8 @@ export default function QuizEditor() {
                 <label htmlFor="wd-one-at-a-time" className="form-label">One Question at a Time</label>
                 <select id="wd-one-at-a-time" className="form-select" value={quiz?.oneQuestionataTime ? 'Yes' : 'No'} onChange={(e) =>
                     setQuiz({ ...quiz, oneQuestionataTime: e.target.value === 'Yes' })}>
-                    <option>Yes</option>
-                    <option>No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </select>
             </div>
 
@@ -399,8 +396,8 @@ export default function QuizEditor() {
                 <label htmlFor="wd-webcam" className="form-label">Webcam Required</label>
                 <select id="wd-webcam" className="form-select" value={quiz?.webCam ? 'Yes' : 'No'} onChange={(e) =>
                     setQuiz({ ...quiz, webCam: e.target.value === 'Yes' })}>
-                    <option>No</option>
-                    <option>Yes</option>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
                 </select>
             </div>
 
@@ -408,8 +405,8 @@ export default function QuizEditor() {
                 <label htmlFor="wd-lock" className="form-label">Lock Questions After Answering</label>
                 <select id="wd-lock" className="form-select" value={quiz?.lockQuestion ? 'Yes' : 'No'} onChange={(e) =>
                     setQuiz({ ...quiz, lockQuestion: e.target.value === 'Yes' })}>
-                <option>No</option>
-                    <option>Yes</option>
+                <option value="No">No</option>
+                    <option value="Yes">Yes</option>
                 </select>
             </div>
 

@@ -122,12 +122,17 @@ export default function Quizzes() {
 
                                 <ul className="ms-4 text-wrap txt-caption list-unstyled">
                                     <li>
-                                        <span className="fw-bold">Available: </span> {new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
+                                        {/* <span className="fw-bold">Available: </span> {new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
                                         year: 'numeric',
                                         month: 'short',
                                         day: 'numeric',
-                                    })} at 12:00pm |{" "}
-                                        <span className="fw-bold">Due:</span> {new Date(quiz.dueDate).toLocaleDateString('en-US', {
+                                    })} at 12:00pm |{" "} */}
+                                        <span >Availability: {quiz.availableFromDate === 'N/A' ? 'N/A' : (new Date() < new Date(quiz.availableFromDate) ? `Not available until ${new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                    })}` : (new Date() <= new Date(quiz.dueDate) ? 'Available' : 'Closed'))} </span>
+                                        <span>Due:</span> {new Date(quiz.dueDate).toLocaleDateString('en-US', {
                                         year: 'numeric',
                                         month: 'short',
                                         day: 'numeric',

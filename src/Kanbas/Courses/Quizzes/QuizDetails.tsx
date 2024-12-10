@@ -36,6 +36,7 @@ function QuizDetailsScreen() {
             shuffleAnswers: false,
             timelimit: 0,
             multipleAttempts: false,
+            numAttempts: 1,
             showAnswers: "Never",
             accessCode: "",
             oneQuestionataTime: false,
@@ -64,6 +65,7 @@ function QuizDetailsScreen() {
         shuffleAnswers: false,
         timelimit: 0,
         multipleAttempts: false,
+        numAttempts: 1,
         showAnswers: "Never",
         accessCode: "",
         oneQuestionataTime: false,
@@ -86,19 +88,13 @@ function QuizDetailsScreen() {
           if (selectedQuiz) setQuiz(selectedQuiz);
         }
       }, [quizzes, qid]);
-    // const { cid, qid } = useParams();
-    // const navigate = useNavigate();
-    // const dispatch = useDispatch();
-    // const quizzes = useSelector((state: any) => state.quizReducer.quiz);
-    // const { currentUser } = useSelector((state: any) => state.accountReducer);
-    // const [quiz, setQuiz] = useState(quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid)) 
-
-
  
 
   const handlePreview = () => {
     // Logic to navigate to quiz preview screen
     console.log("Previewing quiz");
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/Detail/Preview/${qid}`);
+
   };
 
   const handleEdit = () => {
@@ -176,6 +172,10 @@ function QuizDetailsScreen() {
                 <td>{quiz.multipleAttempts ? 'Yes' : 'No'}</td>
             </tr>
             <tr>
+                <td><strong>Attempts:</strong></td>
+                <td>{quiz.numAttempts}</td>
+            </tr>
+            <tr>
                 <td><strong>Show Correct Answers:</strong></td>
                 <td>{quiz.showAnswers ? 'Yes' : 'No'}</td>
             </tr>
@@ -216,32 +216,10 @@ function QuizDetailsScreen() {
             </tbody>
         </table>
       </div>
-      {/* <h2>Quiz Details: {quiz.title}</h2>
-      <div className="text-center">
-        <p>Quiz Type: {quiz.type}</p>
-        <p>Points: {quiz.points}</p>
-        <p>Assignment Group: {quiz.group}</p>
-        <p>Shuffle Answers: {quiz.shuffleAnswers ? 'Yes' : 'No'}</p>
-        <p>Time Limit: {quiz.timelimit} Minutes</p>
-        <p>Multiple Attempts: {quiz.multipleAttempts ? 'Yes' : 'No'}</p>
-        <p>Show Correct Answers: {quiz.showAnswers ? 'Yes' : 'No'}</p>
-        <p>Access Code: {quiz.accessCode || 'Blank'}</p>
-        <p>One Question at a Time: {quiz.oneQuestionataTime ? 'Yes' : 'No'}</p>
-        <p>Webcam Required: {quiz.webCam ? 'Yes' : 'No'}</p>
-        <p>Lock Questions After Answering: {quiz.lockQuestion ? 'Yes' : 'No'}</p>
-        <p>Due Date: {new Date(quiz.dueDate).toLocaleDateString('en-US', {
-              month: 'short', day: 'numeric', year: 'numeric'
-            })}</p>
-        <p>Available Date: {new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
-              month: 'short', day: 'numeric', year: 'numeric'
-            })}</p>
-        <p>Until Date: {new Date(quiz.availableUntilDate).toLocaleDateString('en-US', {
-              month: 'short', day: 'numeric', year: 'numeric'
-            })}</p>
-      </div> */}
+     
       <div className="d-flex justify-content-center align-items-center">
-        <button className="btn btn-secondary" onClick={() => handlePublishQuiz(qid)}>{quiz.published ? 'Unpublish' : 'Publish'}</button>
-        <button className="btn btn-secondary me-2" onClick={handleExit}>Cancel</button>
+        <button className="btn btn-secondary me-2" onClick={() => handlePublishQuiz(qid)}>{quiz.published ? 'Unpublish' : 'Publish'}</button>
+        <button className="btn btn-secondary me-2" onClick={handleExit}>Back</button>
       </div>
     </div>
   );
