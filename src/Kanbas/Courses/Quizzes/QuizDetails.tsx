@@ -3,15 +3,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from "react-router";
 import { useState } from 'react';
-import { setQuizzes } from "./reducer"; 
+import { setQuizzes, updateQuiz } from "./reducer"; 
 import * as coursesClient from "../client";
 import { queryByDisplayValue } from '@testing-library/react';
+import * as quizzesClient from "./client";
 
 function QuizDetailsScreen() {
     const { cid, qid } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { quizzes } = useSelector((state: any) => state.quizReducer);
+
 
     const fetchQuizzes = async () => {
         const modules = await coursesClient.findQuizForCourse(cid as string);
@@ -92,10 +94,7 @@ function QuizDetailsScreen() {
     // const [quiz, setQuiz] = useState(quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid)) 
 
 
-  const handlePublish = () => {
-    // Logic to publish the quiz
-    console.log("Publishing quiz");
-  };
+ 
 
   const handlePreview = () => {
     // Logic to navigate to quiz preview screen
@@ -112,11 +111,113 @@ function QuizDetailsScreen() {
     console.log("Exiting quiz detail");
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   };
+  const saveQuiz = async (quiz: any) => {
+    try {
+      // Call the API to update the quiz on the server
+      await quizzesClient.updateQuiz(quiz);
+  
+      // After successful save, dispatch update to Redux state
+      dispatch(updateQuiz(quiz));
+    } catch (error) {
+      console.error("Error saving quiz:", error);
+      // Optionally, handle the error, show a message, etc.
+    }
+  };
+  
+  const handlePublishQuiz = async (quizId: any) => {
+    const updatedQuiz = quizzes.find((quiz: any) => quiz._id === quizId);
+    if (updatedQuiz) {
+        const updatedQuizData = { ...updatedQuiz, published: !updatedQuiz.published };
+        await saveQuiz(updatedQuizData); 
+      // Dispatch the update action to save the changes in the Redux store
+      dispatch(updateQuiz(updatedQuizData));
+    }
+    console.log("Publishing quiz from quiz details");
+  };
+  
+
 
   return (
     <div>
-      <h2>Quiz Details: {quiz.title}</h2>
-      <div>
+        <div className="d-flex justify-content-center align-items-center">
+            <button className="btn btn-secondary me-2" onClick={handlePreview}>
+                Preview
+            </button>
+            <button className="btn btn-danger" onClick={handleEdit}>
+                Edit
+            </button>
+        </div>
+        <h2>Quiz Details: {quiz.title}</h2>
+        <div className="d-flex justify-content-center">
+        <table>
+            <tbody>
+            <tr>
+                <td><strong>Quiz Type:</strong></td>
+                <td>{quiz.type}</td>
+            </tr>
+            <tr>
+                <td><strong>Points:</strong></td>
+                <td>{quiz.points}</td>
+            </tr>
+            <tr>
+                <td><strong>Assignment Group:</strong></td>
+                <td>{quiz.group}</td>
+            </tr>
+            <tr>
+                <td><strong>Shuffle Answers:</strong></td>
+                <td>{quiz.shuffleAnswers ? 'Yes' : 'No'}</td>
+            </tr>
+            <tr>
+                <td><strong>Time Limit:</strong></td>
+                <td>{quiz.timelimit} Minutes</td>
+            </tr>
+            <tr>
+                <td><strong>Multiple Attempts:</strong></td>
+                <td>{quiz.multipleAttempts ? 'Yes' : 'No'}</td>
+            </tr>
+            <tr>
+                <td><strong>Show Correct Answers:</strong></td>
+                <td>{quiz.showAnswers ? 'Yes' : 'No'}</td>
+            </tr>
+            <tr>
+                <td><strong>Access Code:</strong></td>
+                <td>{quiz.accessCode || 'Blank'}</td>
+            </tr>
+            <tr>
+                <td><strong>One Question at a Time:</strong></td>
+                <td>{quiz.oneQuestionataTime ? 'Yes' : 'No'}</td>
+            </tr>
+            <tr>
+                <td><strong>Webcam Required:</strong></td>
+                <td>{quiz.webCam ? 'Yes' : 'No'}</td>
+            </tr>
+            <tr>
+                <td><strong>Lock Questions After Answering:</strong></td>
+                <td>{quiz.lockQuestion ? 'Yes' : 'No'}</td>
+            </tr>
+            <tr>
+                <td><strong>Due Date:</strong></td>
+                <td>{new Date(quiz.dueDate).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric'
+                    })}</td>
+            </tr>
+            <tr>
+                <td><strong>Available Date:</strong></td>
+                <td>{new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric'
+                    })}</td>
+            </tr>
+            <tr>
+                <td><strong>Until Date:</strong></td>
+                <td>{new Date(quiz.availableUntilDate).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric'
+                    })}</td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+      {/* <h2>Quiz Details: {quiz.title}</h2>
+      <div className="text-center">
         <p>Quiz Type: {quiz.type}</p>
         <p>Points: {quiz.points}</p>
         <p>Assignment Group: {quiz.group}</p>
@@ -129,20 +230,19 @@ function QuizDetailsScreen() {
         <p>Webcam Required: {quiz.webCam ? 'Yes' : 'No'}</p>
         <p>Lock Questions After Answering: {quiz.lockQuestion ? 'Yes' : 'No'}</p>
         <p>Due Date: {new Date(quiz.dueDate).toLocaleDateString('en-US', {
-              month: 'long', day: 'numeric', year: 'numeric'
+              month: 'short', day: 'numeric', year: 'numeric'
             })}</p>
         <p>Available Date: {new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
-              month: 'long', day: 'numeric', year: 'numeric'
+              month: 'short', day: 'numeric', year: 'numeric'
             })}</p>
         <p>Until Date: {new Date(quiz.availableUntilDate).toLocaleDateString('en-US', {
-              month: 'long', day: 'numeric', year: 'numeric'
+              month: 'short', day: 'numeric', year: 'numeric'
             })}</p>
+      </div> */}
+      <div className="d-flex justify-content-center align-items-center">
+        <button className="btn btn-secondary" onClick={() => handlePublishQuiz(qid)}>{quiz.published ? 'Unpublish' : 'Publish'}</button>
+        <button className="btn btn-secondary me-2" onClick={handleExit}>Cancel</button>
       </div>
-      <button className="btn btn-secondary me-2" onClick={handlePublish}>Publish</button>
-      <button className="btn btn-secondary me-2" onClick={handlePreview}>Preview</button>
-      <button className="btn btn-danger me-2" onClick={handleEdit}>Edit</button>
-      <button className="btn btn-secondary me-2" onClick={handleExit}>Cancel</button>
-
     </div>
   );
 }

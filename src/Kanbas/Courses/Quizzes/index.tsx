@@ -13,7 +13,7 @@ import * as db from "../../Database";
 import * as quizzesClient from "./client";
 import * as coursesClient from "../client";
 
-import { addQuiz, deleteQuiz, updateQuiz, setQuizzes } from "./reducer";
+import { addQuiz, deleteQuiz, updateQuiz, setQuizzes, editQuiz } from "./reducer";
 
 import QuizIndivButtons from "./QuizIndivButtons";
 
@@ -41,13 +41,24 @@ export default function Quizzes() {
             dispatch(setQuizzes(quizzes));
         }
     }
-
+    const handlePublishQuiz = (quizId: any) => {
+        dispatch(setQuizzes(
+            quizzes.map((quiz: any) => 
+                quiz.id === quizId 
+                    ? { ...quiz, published: !quiz.published } 
+                    : quiz
+            )
+        ));
+    };
+    
 
       useEffect(() => {
         fetchQuizzes();
       }, [cid]);
     
       console.log(quizzes)
+      // Function to handle publishing/unpublishing a quiz
+    
 
     return (
 
@@ -83,7 +94,8 @@ export default function Quizzes() {
                                                 to={`/Kanbas/Courses/${cid}/Quizzes/Detail/${quiz._id}`}
                                                 className="text-decoration-none text-black"
                                             >
-                                                <span className="ms-2 text-start">{quiz.title}</span>
+                                                <span className="ms-2 text-start">{quiz.title} </span>
+                                                <span>{quiz.published === true ? '✅' : '🚫'}</span>
                                             </Link>
                                         {/* ) : (
                                             <Link
