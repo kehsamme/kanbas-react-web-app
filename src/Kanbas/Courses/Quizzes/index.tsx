@@ -56,7 +56,7 @@ export default function Quizzes() {
             <div className="d-flex justify-content-end mb-2">
                 {currentUser.role === "FACULTY" && ( 
                     <Link
-                        to={`/Kanbas/Courses/${cid}/Quizzes/Editor`}
+                        to={`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor`}
                         className="btn btn-danger btn-lg text-decoration-none text-white"
                     >
                         <FaPlus className="me-2" />
@@ -80,7 +80,7 @@ export default function Quizzes() {
                                         {/* {currentUser.role === "FACULTY" ? ( */}
                                             <Link
                                                 // to={`/Kanbas/Courses/${cid}/Quizzes/Detail/${quiz._id}`}
-                                                to={`/Kanbas/Courses/${cid}/Quizzes/Editor/${quiz._id}`}
+                                                to={`/Kanbas/Courses/${cid}/Quizzes/Detail/${quiz._id}`}
                                                 className="text-decoration-none text-black"
                                             >
                                                 <span className="ms-2 text-start">{quiz.title}</span>

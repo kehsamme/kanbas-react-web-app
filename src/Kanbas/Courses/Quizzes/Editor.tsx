@@ -432,7 +432,7 @@ export default function QuizEditor() {
             </div>
 
             <div className="d-flex justify-content-end mb-3">
-                <button className="btn btn-secondary me-2" onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes`)}>Cancel</button>
+                <button className="btn btn-secondary me-2" onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/Detail/${qid}`)}>Cancel</button>
                 <button className="btn btn-danger" onClick={handleSave}>Save</button>
             </div>
         </div>

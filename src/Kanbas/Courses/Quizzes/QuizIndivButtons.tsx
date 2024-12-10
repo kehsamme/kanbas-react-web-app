@@ -23,7 +23,7 @@ export default function QuizIndivButtons({
       <GreenCheckmark />
       <IoEllipsisVertical
         className="fs-4"
-        onClick={() => navigate(`/Kanbas/Courses/${courseId}/Quizzes/Editor`)} // Use courseId prop
+        onClick={() => navigate(`/Kanbas/Courses/${courseId}/Quizzes/Detail/Editor/${quizId}`)} // Use courseId prop
       />
     </div>
   );
