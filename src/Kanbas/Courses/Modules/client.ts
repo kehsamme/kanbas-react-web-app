@@ -5,6 +5,7 @@ const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 const MODULES_API = `${REMOTE_SERVER}/api/modules`;
 export const updateModule = async (module: any) => {
     const { data } = await axiosWithCredentials.put(`${MODULES_API}/${module._id}`, module);
+    console.log("in module client", data)
     return data;
   };  
 export const deleteModule = async (moduleId: string) => {

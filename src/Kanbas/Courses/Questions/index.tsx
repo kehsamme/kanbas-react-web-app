@@ -23,7 +23,7 @@ import QuestionIndivButtons from "./QuestionIdivButtons";
 
 export default function Questions() {
     // const { qid } = useParams();
-    const { cid, qid } = useParams();
+    const { cid, qid, questid } = useParams();
     const {questions} = useSelector((state: any) => state.questionReducer);
     // const [quizzes, setQuizzes] = useState<any[]>([]);
 
@@ -72,7 +72,7 @@ export default function Questions() {
             <div className="d-flex justify-content-end mb-2">
                 {currentUser.role === "FACULTY" && ( 
                     <Link
-                        to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions/Editor`}
+                        to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions/${questid}/Editor`}
                         className="btn btn-danger btn-lg text-decoration-none text-white"
                     >
                         <FaPlus className="me-2" />

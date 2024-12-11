@@ -37,23 +37,51 @@ export default function QuestionEditor() {
             number: `M${questions.length + 1}`,
             quiz: "dummy_id",
             question: "",
-            options: "",
-            answers: "",
+            options: [],
+            answers: [],
         }
         setQuestion(newQuestion)
       }, [questions]);
     
     // Initialize state with assignment values
-    const [question, setQuestion] = useState({
-            title: "",
-            points: 0,
-            questionType: "TF",
-            number: `M${questions.length + 1}`,
-            quiz: "dummy_id",
-            question: "",
-            options: "",
-            answers: "",
+    // const [question, setQuestion] = useState({
+    //         title: "",
+    //         points: 0,
+    //         questionType: "True False",
+    //         number: `M${questions.length + 1}`,
+    //         quiz: "dummy_id",
+    //         question: "",
+    //         options: [],
+    //         answers: [],
+    // });
+    const [question, setQuestion] = useState<{
+        title: string;
+        points: number;
+        questionType: string;
+        number: string;
+        quiz: string;
+        question: string;
+        options: string[];
+        answers: string[]; // Changed to explicitly reflect it's an array of strings
+    }>({
+        title: "",
+        points: 0,
+        questionType: "True False",
+        number: `M${questions.length + 1}`,
+        quiz: "dummy_id",
+        question: "",
+        options: [],
+        answers: [],
     });
+    const handleQuestionTypeChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedType = e.target.value;
+        setQuestion({
+            ...question,
+            questionType: selectedType,
+            answers: selectedType === "Multiple Choice" ? [""] : [], // Initialize answers differently based on type
+            options: selectedType === "Multiple Choice" ? ["Option 1", "Option 2"] : [], // Add placeholder options for multiple choice
+        });
+    };
     
       useEffect(() => {
         if (questions.length > 0 && questid) {
@@ -111,7 +139,7 @@ export default function QuestionEditor() {
             points: question.points || 0, // Default to 0 points if not provided
             question: question.question || "", // The question text
             options: question.options || [], // Default to an empty array if no options
-            answers: question.answers || "", // Default to an empty string if no answers provided
+            answers: question.answers || [], // Default to an empty string if no answers provided
         };
         
     
@@ -148,7 +176,7 @@ export default function QuestionEditor() {
         }
       
         // Navigate back to assignments list
-        navigate(`/Kanbas/Courses/${cid}/Quizzes`);
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions`);
       };
 
     
@@ -162,11 +190,14 @@ export default function QuestionEditor() {
         <h2> QUESTION EDITOR AND MAKER PAGE</h2>
             <div className="mb-3">
                 <label htmlFor="wd-type" className="form-label">Quiz Type</label>
-                <select id="wd-type" className="form-select" value={question?.questionType} onChange={(e) =>
-                    setQuestion({ ...question, questionType: e.target.value })}>
-                <option>Graded Quiz</option>
-                    <option>Practice Quiz</option>
-                    <option>Graded Survey</option>
+                <select id="wd-type" className="form-select" value={question?.questionType} 
+                    onChange={handleQuestionTypeChange}
+                    // onChange={(e) =>
+                    // setQuestion({ ...question, questionType: e.target.value })}
+                    >
+                <option>True False</option>
+                    <option>Multiple Choice</option>
+                    <option>Fill in the Blank</option>
                 </select>
             </div>
         
@@ -194,15 +225,85 @@ export default function QuestionEditor() {
                     id="wd-answer"
                     className="form-select"
                     value={question.answers} // Display "Yes" or "No" based on the boolean value
-                    onChange={(e) =>
-                        setQuestion({ ...question, answers: e.target.value})}>
+                    // onChange={(e) =>
+                    //     setQuestion({ ...question, answers: e.target.value})}
+                        >
                     <option value="True">True</option>
                     <option value="False">False</option>
                 </select>
             </div>
+            <div className="mb-3">
+                <label htmlFor="wd-answer" className="form-label">Answer</label>
+
+                {/* Render True/False options */}
+                {question.questionType === "True False" && (
+                    <select
+                        id="wd-answer"
+                        className="form-select"
+                        value={question.answers}
+                        // onChange={(e) => setQuestion({ ...question, answers: e.target.value })}
+                    >
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                )}
+
+                {/* Render Multiple Choice Options */}
+                {question.questionType === "Multiple Choice" && (
+                    <div>
+                        {question.options.map((option, index) => (
+                            <div key={index} className="mb-2 d-flex align-items-center">
+                                <input
+                                    type="text"
+                                    className="form-control me-2"
+                                    placeholder={`Option ${index + 1}`}
+                                    value={option}
+                                    // onChange={(e) => {
+                                    //     const updatedOptions = [...question.options];
+                                    //     updatedOptions[index] = e.target.value;
+                                    //     setQuestion({ ...question, options: updatedOptions });
+                                    // }}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() => {
+                                        const updatedOptions = question.options.filter((_, i) => i !== index);
+                                        setQuestion({ ...question, options: updatedOptions });
+                                    }}
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() =>
+                                setQuestion({ ...question, options: [...question.options, ""] })
+                            }
+                        >
+                            Add Option
+                        </button>
+                    </div>
+                )}
+
+                {/* Render Fill in the Blank */}
+                {question.questionType === "Fill in the Blank" && (
+                    <input
+                        type="text"
+                        id="wd-answer"
+                        className="form-control"
+                        placeholder="Enter the correct answer"
+                        value={question.answers}
+                        // onChange={(e) => setQuestion({ ...question, answers: e.target.value })}
+                    />
+                )}
+            </div>
+       
             
             <div className="d-flex justify-content-end mb-3">
-                <button className="btn btn-secondary me-2" onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor/Questions/${qid}`)}>Cancel</button>
+                <button className="btn btn-secondary me-2" onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions`)}>Cancel</button>
                 <button className="btn btn-danger" onClick={handleSave}>Update Question</button>
             </div>
         </div>

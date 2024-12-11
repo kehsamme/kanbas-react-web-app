@@ -14,11 +14,11 @@ import { Link } from 'react-router-dom';
 
 
 export default function QuizEditor() {
-    const { cid, qid, questid} = useParams();
+    const { cid, qid} = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { quizzes } = useSelector((state: any) => state.quizReducer);
-    console.log("in quiz editor", cid, qid, questid);
+    console.log("in quiz editor", cid, qid);
     const fetchQuizzes = async () => {
         const modules = await coursesClient.findQuizForCourse(cid as string);
         dispatch(setQuizzes(modules));
