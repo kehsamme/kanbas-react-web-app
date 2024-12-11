@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import { BsGripVertical } from "react-icons/bs";
-import QuizControlButtons from "./QuizControlButtons";
+import QuizControlButtons from "../Quizzes/QuizControlButtons";
 import AssignmentPrefixButtons from "../Assignments/AssignmentPercentButtons";
 import React  from "react";
 import { Link } from "react-router-dom";
@@ -10,53 +10,58 @@ import AssignmentIndivButtons from "../Assignments/AssignmentControlsButtons";
 import {FaPlus} from "react-icons/fa";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import * as db from "../../Database";
-import * as quizzesClient from "./client";
+import * as quizzesClient from "../Quizzes/client";
 import * as coursesClient from "../client";
-
-import { addQuiz, deleteQuiz, updateQuiz, setQuizzes, editQuiz } from "./reducer";
-
-import QuizIndivButtons from "./QuizIndivButtons";
+import * as questionsClient from "../Questions/client";
 
 
-export default function Quizzes() {
+// import { addQuiz, deleteQuiz, updateQuiz, setQuizzes, editQuiz } from "../Quizzes/reducer";
+import { addQuestion, deleteQuestion, updateQuestion, setQuestions, editQuestion} from "../Questions/reducer";
+
+import QuestionIndivButtons from "./QuestionIdivButtons";
+
+
+export default function Questions() {
     // const { qid } = useParams();
-    const { cid } = useParams();
-    const {quizzes} = useSelector((state: any) => state.quizReducer);
+    const { cid, qid } = useParams();
+    const {questions} = useSelector((state: any) => state.questionReducer);
     // const [quizzes, setQuizzes] = useState<any[]>([]);
 
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
 
    
-    const removeQuiz = async ( quizId: string) => {
+    const removeQuestion = async (questionId: string) => {
         console.log("in remove quiz...", );
-        await quizzesClient.deleteQuiz(quizId);
-        dispatch(deleteQuiz(quizId));
+        await questionsClient.deleteQuestion(questionId);
+        dispatch(deleteQuestion(questionId));
       };
     
-      const fetchQuizzes = async () => {
-        if(cid) {
-        console.log("in fetchQuizzes quizzes.index...", cid);
-            const quizzes = await coursesClient.findQuizForCourse(cid);
-            dispatch(setQuizzes(quizzes));
+    //   const fetchQuestions = async () => {
+    //     if(qid) {
+    //     console.log("in fetchQuestions questions.index...", qid);
+    //         const questions = await questionsClient.findQuestionForQuiz(qid);
+    //         dispatch(setQuestions(questions));
+    //     }
+    // }
+    const fetchQuestions = async () => {
+        if(qid) {
+        console.log("in fetchQuestions questions.index...", qid);
+            const questions = await questionsClient.findQuestionForQuiz(qid);
+            // const questions = await questionsClient.fetchAllQuestions();
+            console.log("in fetchQuestions questions ...", questions);
+
+
+            dispatch(setQuestions(questions));
         }
-    }
-    const handlePublishQuiz = (quizId: any) => {
-        dispatch(setQuizzes(
-            quizzes.map((quiz: any) => 
-                quiz.id === quizId 
-                    ? { ...quiz, published: !quiz.published } 
-                    : quiz
-            )
-        ));
     };
     
 
       useEffect(() => {
-        fetchQuizzes();
-      }, [cid]);
+        fetchQuestions();
+      }, [qid]);
     
-      console.log(quizzes)
+      console.log("questions",questions)
       // Function to handle publishing/unpublishing a quiz
     
 
@@ -67,35 +72,34 @@ export default function Quizzes() {
             <div className="d-flex justify-content-end mb-2">
                 {currentUser.role === "FACULTY" && ( 
                     <Link
-                        to={`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor`}
+                        to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions/Editor`}
                         className="btn btn-danger btn-lg text-decoration-none text-white"
                     >
                         <FaPlus className="me-2" />
-                        Quiz
+                        Question
                     </Link>
                 )}
             </div>
 
             <div className="wd-title p-3 ps-2 bg-secondary">
-                <BsGripVertical className="me-2 fs-3" /> Quizzes <QuizControlButtons />
+                <BsGripVertical className="me-2 fs-3" /> Questions <QuizControlButtons />
             </div>
 
             <ul id="wd-quizzes" className="list-group rounded-0">
-                {quizzes
-                    .map((quiz: any) => (
-                        <li className="wd-module list-group-item p-0 fs-5 border-gray" key={quiz.id}>
+                {questions
+                    .map((question: any) => (
+                        <li className="wd-module list-group-item p-0 fs-5 border-gray" key={question.id}>
                             <div className="wd-quiz-list-item p-3 ps-2 wd-lesson">
                                 <div className="d-flex justify-content-between align-items-center mb-2">
                                     <div className="d-flex align-items-center">
-                                        <AssignmentPrefixButtons />
                                         {/* {currentUser.role === "FACULTY" ? ( */}
                                             <Link
                                                 // to={`/Kanbas/Courses/${cid}/Quizzes/Detail/${quiz._id}`}
-                                                to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Detail`}
+                                                to={`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor/Questions/Editor/${question._id}`}
                                                 className="text-decoration-none text-black"
                                             >
-                                                <span className="ms-2 text-start">{quiz.title} </span>
-                                                <span>{quiz.published === true ? '✅' : '🚫'}</span>
+                                                <span className="ms-2 text-start">{question.title} </span>
+                        
                                             </Link>
                                         {/* ) : (
                                             <Link
@@ -109,31 +113,21 @@ export default function Quizzes() {
 
                                     </div>
 
-                                    {currentUser.role === "FACULTY" ? (
-                                        <QuizIndivButtons quizId={quiz._id}
-                                                          deleteQuiz={(quizId) => removeQuiz(quizId)}
-                                                        //   deleteQuiz={removeQuiz} 
-                                                          courseId = {quiz.course}/>
+                                    {/* {currentUser.role === "FACULTY" ? (
+                                        <QuestionIndivButtons questionId={question._id}
+                                                              quizId = {qid as string}
+                                                              courseId = {question.course}
+                                                              deleteQuestion={(questionId) => removeQuestion(questionId)}/>
                                     ) : (
                                         <LessonControlButtons/>
 
-                                    )}
+                                    )} */}
                                 </div>
 
                                 <ul className="ms-4 text-wrap txt-caption list-unstyled">
                                     <li>
-                                        <span >Availability: {quiz.availableFromDate === 'N/A' ? 'N/A' : (new Date() < new Date(quiz.availableFromDate) ? `Not available until ${new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                    })}` : (new Date() <= new Date(quiz.dueDate) ? 'Available' : 'Closed'))} </span>
-                                        <span>Due:</span> {new Date(quiz.dueDate).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                    })} at 11:59pm |{" "}
-                                        <span >{quiz.points} pts |{" "}</span>
-                                        <span >{quiz.questionNumber} Questions</span>
+                                        <span >{question.points} pts |{" "}</span>
+                                        <span >{question.questionType}</span>
                                     </li>
                                 </ul>
                             </div>

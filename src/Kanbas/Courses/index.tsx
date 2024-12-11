@@ -10,8 +10,9 @@ import PeopleTable from "./People/Table";
 import Quizzes from "./Quizzes";
 import QuizEditor from "./Quizzes/Editor";
 import QuizDetailsScreen from "./Quizzes/QuizDetails";
-import QuestionEditor from "./Quizzes/QuestionsEditor";
+import QuestionEditor from "./Questions/QuestionsEditor";
 import QuizPreview from "./Quizzes/QuizPreview";
+import Questions from "./Questions";
 
 export default function Courses({ courses }: { courses: any[]; }) {
     const {cid} = useParams();
@@ -35,11 +36,12 @@ export default function Courses({ courses }: { courses: any[]; }) {
                 <Route path="Assignments" element={<Assignments />} />
                 <Route path="Assignments/:aid" element={< AssignmentEditor />} />
                 <Route path="Quizzes" element={< Quizzes/>} />
-                <Route path="Quizzes/Detail/:qid" element={<QuizDetailsScreen />}/>
-                <Route path="Quizzes/Detail/Editor/:qid" element={<QuizEditor />}/>
+                <Route path="Quizzes/:qid/Detail" element={<QuizDetailsScreen />}/>
+                <Route path="Quizzes/:qid/Detail/Editor" element={<QuizEditor />}/>
                 <Route path="Quizzes/Detail/Editor" element={<QuizEditor />} />
-                <Route path="Quizzes/Detail/Editor/Questions/:qid" element={<QuestionEditor />} />
-                <Route path="Quizzes/Detail/Preview/:qid" element={<QuizPreview />} />
+                <Route path="Quizzes/:qid/Detail/Editor/Questions" element={<Questions />} />
+                <Route path="Quizzes/:qid/Detail/Editor/Questions/Editor" element={<QuestionEditor />} />
+                <Route path="Quizzes/:qid/Detail/Preview" element={<QuizPreview />} />
 
 
                         {/* <Route

@@ -14,11 +14,11 @@ import { Link } from 'react-router-dom';
 
 
 export default function QuizEditor() {
-    const { cid, qid } = useParams();
+    const { cid, qid, questid} = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { quizzes } = useSelector((state: any) => state.quizReducer);
-
+    console.log("in quiz editor", cid, qid, questid);
     const fetchQuizzes = async () => {
         const modules = await coursesClient.findQuizForCourse(cid as string);
         dispatch(setQuizzes(modules));
@@ -216,61 +216,10 @@ export default function QuizEditor() {
         }
       
         // Navigate back to assignments list
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/Detail/${qid}`);
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail`);
       };
 
-    // // OLD STUFF IGNORE
-    // const createQuizForCourse = async (cid: any, quiz_1: any) => {
-    //      if (!cid) return;
-    //      //console.log("New assignment: ", assignment_1)
-    //      // const newAssignment = { name: assignmentName, course: cid };
-    //      const quiz = await coursesClient.createQuizForCourse(cid, quiz_1);
-    //      //console.log("New Assignment return from api call:", assignment); // Debug Redux update
-    //      dispatch(addQuiz(quiz));
-    //    };
-
-    // const { pathname } = useLocation();
-    // const quiz = useSelector((state: any) => state.quizReducer.quiz);
-    // const defaultQuiz = {
-    //     title: "Quiz",
-    //     description: "Description",
-    //     points: 100,
-    //     assigned_group: "QUIZZES",
-    //     type: "GRADED",
-    //     shuffle: "YES",
-    //     time: 20,
-    //     multipleAttempts: "NO",
-    //     showAns: "NO",
-    //     accessCode: "",
-    //     oneAtATime: "YES",
-    //     webcam: "NO",
-    //     lock: "NO",
-    //     due_date: "2024-11-13",
-    //     until_date: "2024-11-13",
-    //     available_date: "2024-11-13"
-    // };
-
-    // useEffect(() => {
-    //     if (pathname.includes("Editor")) {
-    //         dispatch(setQuiz(defaultQuiz))
-    //     } else {
-    //         const existingQuiz = quizzes.find((q) => q._id === qid);
-    //         if (existingQuiz) {
-    //             dispatch(setQuiz(existingQuiz));
-    //         }
-    //     }
-    // }, [qid, dispatch]);
-    
-    // const handleSave = () => {
-    //     if (pathname.includes("Editor")){
-    //         // createQuizForCourse(cid, newAssignment); 
-    //         dispatch(addQuiz({...quiz, course: cid}));
-    //     } else {
-    //         dispatch(updateQuiz(quiz))
-    //     }
-    //     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
-    // };
-    
+   
 
     console.log(quiz)
 
@@ -278,12 +227,13 @@ export default function QuizEditor() {
         <div className="container mt-4" id="wd-quizzes-editor">
             <ul className="nav nav-tabs">
             <li className="nav-item">
-                <Link className="nav-link active" to={`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor/${qid}`}>Details</Link>
+                <Link className="nav-link active" to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor`}>Details</Link>
                 {/* <a className="nav-link active" href="#">Details</a> */}
             </li>
             <li className="nav-item">
                 {/* <a className="nav-link" href="#">Questions</a> */}
-                <Link className="nav-link" to={`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor/Questions/${qid}`}>Questions</Link>
+                <Link className="nav-link" to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions`}>Questions</Link>
+
             </li>
         </ul>
             <div className="mb-3">

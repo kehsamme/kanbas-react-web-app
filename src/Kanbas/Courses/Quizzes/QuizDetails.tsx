@@ -93,14 +93,14 @@ function QuizDetailsScreen() {
   const handlePreview = () => {
     // Logic to navigate to quiz preview screen
     console.log("Previewing quiz");
-    navigate(`/Kanbas/Courses/${cid}/Quizzes/Detail/Preview/${qid}`);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Preview`);
 
   };
 
   const handleEdit = () => {
     // Logic to navigate to quiz editor screen
     console.log("Editing quiz");
-    navigate(`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor/${qid}`);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor`);
   };
   const handleExit = () => {
     // Logic to navigate to quiz editor screen
