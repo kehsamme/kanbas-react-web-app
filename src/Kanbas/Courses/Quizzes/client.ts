@@ -11,6 +11,7 @@ export const updateQuiz = async (quiz: any) => {
     return data;
   };  
 export const deleteQuiz = async (quizId: string) => {
+  console.log("delete quiz client", quizId)
  const response = await axiosWithCredentials.delete(`${QUIZ_API}/${quizId}`);
  return response.data;
 };

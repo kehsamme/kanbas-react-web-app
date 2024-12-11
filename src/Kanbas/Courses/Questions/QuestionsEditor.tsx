@@ -8,8 +8,6 @@ import * as questionsClient from "../Questions/client";
 import { Link } from 'react-router-dom';
 
 
-// Is just a duplicate of Quiz Editor FOR NOW
-
 export default function QuestionEditor() {
     const { cid, qid, questid } = useParams();
     const dispatch = useDispatch();
@@ -79,7 +77,7 @@ export default function QuestionEditor() {
             ...question,
             questionType: selectedType,
             answers: selectedType === "Multiple Choice" ? [""] : [], // Initialize answers differently based on type
-            options: selectedType === "Multiple Choice" ? ["Option 1", "Option 2"] : [], // Add placeholder options for multiple choice
+            options: selectedType === "Multiple Choice" ? ["Option 1", "Option 2",  "Option 3"] : [], // Add placeholder options for multiple choice
         });
     };
     
@@ -155,7 +153,7 @@ export default function QuestionEditor() {
         };
         
 
-        if (qid) {
+        if (questid) {
           // If aid exists, update the assignment
           try {
             // dispatch(updateAssignment(assignmentData));
@@ -195,9 +193,9 @@ export default function QuestionEditor() {
                     // onChange={(e) =>
                     // setQuestion({ ...question, questionType: e.target.value })}
                     >
-                <option>True False</option>
-                    <option>Multiple Choice</option>
-                    <option>Fill in the Blank</option>
+                <option value="TF">True False</option>
+                    <option value="MC">Multiple Choice</option>
+                    <option value="BLANKS">Fill in the Blank</option>
                 </select>
             </div>
         
@@ -221,27 +219,14 @@ export default function QuestionEditor() {
             
             <div className="mb-3">
                 <label htmlFor="wd-answer" className="form-label">Answer</label>
-                <select
-                    id="wd-answer"
-                    className="form-select"
-                    value={question.answers} // Display "Yes" or "No" based on the boolean value
-                    // onChange={(e) =>
-                    //     setQuestion({ ...question, answers: e.target.value})}
-                        >
-                    <option value="True">True</option>
-                    <option value="False">False</option>
-                </select>
-            </div>
-            <div className="mb-3">
-                <label htmlFor="wd-answer" className="form-label">Answer</label>
 
                 {/* Render True/False options */}
-                {question.questionType === "True False" && (
+                {question.questionType === "TF" && (
                     <select
                         id="wd-answer"
                         className="form-select"
                         value={question.answers}
-                        // onChange={(e) => setQuestion({ ...question, answers: e.target.value })}
+                        onChange={(e) => setQuestion({ ...question, answers: [e.target.value] })}
                     >
                         <option value="True">True</option>
                         <option value="False">False</option>
@@ -249,7 +234,7 @@ export default function QuestionEditor() {
                 )}
 
                 {/* Render Multiple Choice Options */}
-                {question.questionType === "Multiple Choice" && (
+                {question.questionType === "MC" && (
                     <div>
                         {question.options.map((option, index) => (
                             <div key={index} className="mb-2 d-flex align-items-center">
@@ -258,11 +243,11 @@ export default function QuestionEditor() {
                                     className="form-control me-2"
                                     placeholder={`Option ${index + 1}`}
                                     value={option}
-                                    // onChange={(e) => {
-                                    //     const updatedOptions = [...question.options];
-                                    //     updatedOptions[index] = e.target.value;
-                                    //     setQuestion({ ...question, options: updatedOptions });
-                                    // }}
+                                    onChange={(e) => {
+                                        const updatedOptions = [...question.options];
+                                        updatedOptions[index] = e.target.value;
+                                        setQuestion({ ...question, options: updatedOptions });
+                                    }}
                                 />
                                 <button
                                     type="button"
@@ -287,9 +272,48 @@ export default function QuestionEditor() {
                         </button>
                     </div>
                 )}
+                 {question.questionType === "BLANKS" && (
+                    <div>
+                        {question.options.map((option, index) => (
+                            <div key={index} className="mb-2 d-flex align-items-center">
+                                <input
+                                    type="text"
+                                    className="form-control me-2"
+                                    placeholder={`Possible Anwer ${index + 1}`}
+                                    value={option}
+                                    onChange={(e) => {
+                                        const updatedOptions = [...question.options];
+                                        updatedOptions[index] = e.target.value;
+                                        setQuestion({ ...question, options: updatedOptions });
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() => {
+                                        const updatedOptions = question.options.filter((_, i) => i !== index);
+                                        setQuestion({ ...question, options: updatedOptions });
+                                    }}
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() =>
+                                setQuestion({ ...question, options: [...question.options, ""] })
+                            }
+                        >
+                            Add Possible Answer
+                        </button>
+                    </div>
+                )}
+
 
                 {/* Render Fill in the Blank */}
-                {question.questionType === "Fill in the Blank" && (
+                {/* {question.questionType === "Fill in the Blank" && (
                     <input
                         type="text"
                         id="wd-answer"
@@ -298,13 +322,13 @@ export default function QuestionEditor() {
                         value={question.answers}
                         // onChange={(e) => setQuestion({ ...question, answers: e.target.value })}
                     />
-                )}
+                )} */}
             </div>
        
             
             <div className="d-flex justify-content-end mb-3">
                 <button className="btn btn-secondary me-2" onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions`)}>Cancel</button>
-                <button className="btn btn-danger" onClick={handleSave}>Update Question</button>
+                <button className="btn btn-danger" onClick={handleSave}>Save Question</button>
             </div>
         </div>
     );

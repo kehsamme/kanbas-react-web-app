@@ -143,10 +143,18 @@ function QuizDetailsScreen() {
                 Edit
             </button>
         </div>
-        <h2>Quiz Details: {quiz.title}</h2>
         <div className="d-flex justify-content-center">
         <table>
             <tbody>
+              <tr>
+                <td>
+                <h3>Quiz Details: </h3>
+                </td>
+              </tr>
+            <tr>
+                <td><strong>Quiz Title:</strong></td>
+                <td>{quiz.title}</td>
+            </tr>
             <tr>
                 <td><strong>Quiz Type:</strong></td>
                 <td>{quiz.type}</td>

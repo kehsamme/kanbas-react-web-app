@@ -9,6 +9,7 @@ const QUIZ_API = `${REMOTE_SERVER}/api/quizzes`;
 
 // Quizzes
 export const createQuestionForQuiz = async (quizId: string, question: any) => {
+  console.log("create question");
     const response = await axiosWithCredentials.post(
       `${QUIZ_API}/${quizId}/questions`,
       question
@@ -26,6 +27,7 @@ export const findQuestionForQuiz = async (quizId: string) => {
 
 
 export const updateQuestion = async (question: any) => {
+  console.log("update question");
     const { data } = await axiosWithCredentials.put(`${QUESTION_API}/${question._id}`, question);
     return data;
   };  

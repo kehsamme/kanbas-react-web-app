@@ -32,7 +32,7 @@ export default function Questions() {
 
    
     const removeQuestion = async (questionId: string) => {
-        console.log("in remove quiz...", );
+        console.log("in remove question index...", questionId );
         await questionsClient.deleteQuestion(questionId);
         dispatch(deleteQuestion(questionId));
       };
@@ -72,7 +72,7 @@ export default function Questions() {
             <div className="d-flex justify-content-end mb-2">
                 {currentUser.role === "FACULTY" && ( 
                     <Link
-                        to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions/${questid}/Editor`}
+                        to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions/Editor`}
                         className="btn btn-danger btn-lg text-decoration-none text-white"
                     >
                         <FaPlus className="me-2" />
@@ -95,7 +95,7 @@ export default function Questions() {
                                         {/* {currentUser.role === "FACULTY" ? ( */}
                                             <Link
                                                 // to={`/Kanbas/Courses/${cid}/Quizzes/Detail/${quiz._id}`}
-                                                to={`/Kanbas/Courses/${cid}/Quizzes/Detail/Editor/Questions/Editor/${question._id}`}
+                                                to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor/Questions/${question._id}/Editor`}
                                                 className="text-decoration-none text-black"
                                             >
                                                 <span className="ms-2 text-start">{question.title} </span>
@@ -112,6 +112,16 @@ export default function Questions() {
 
 
                                     </div>
+                                    {currentUser.role === "FACULTY" ? (
+                                        <QuestionIndivButtons questionId={question._id}
+                                                          deleteQuestion={(questionId) => removeQuestion(questionId)}
+                                                        //   deleteQuiz={removeQuiz} 
+                                                          quizId= {question.quiz}
+                                                          courseId = {question.course}/>
+                                    ) : (
+                                        <LessonControlButtons/>
+
+                                    )}
 
                                     {/* {currentUser.role === "FACULTY" ? (
                                         <QuestionIndivButtons questionId={question._id}

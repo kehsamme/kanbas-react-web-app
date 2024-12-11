@@ -7,12 +7,12 @@ export default function QuestionIndivButtons({
   questionId,
   quizId,
   courseId,
-  deleteQuestion, // Add courseId as a prop
+  deleteQuestion, 
 }: {
     questionId: string;
-    quizId: string; // Define courseId prop type
+    quizId: string; 
     courseId: string;
-    deleteQuestion: (quizId: string, questionId: string) => void;
+    deleteQuestion: (questionId: string) => void;
 }) {
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ export default function QuestionIndivButtons({
     <div className="float-end">
       <FaTrash
         className="text-danger me-2 mb-1"
-        onClick={() => deleteQuestion(quizId, questionId)}
+        onClick={() => deleteQuestion(questionId)}
       />
       <GreenCheckmark />
       <IoEllipsisVertical
