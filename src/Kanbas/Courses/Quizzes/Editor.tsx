@@ -8,6 +8,7 @@ import {addQuiz, setQuizzes, updateQuiz} from "./reducer";
 import {addAssignment} from "../Assignments/reducer";
 import * as coursesClient from "../client";
 import * as quizzesClient from "./client";
+import * as scoresClient from "./scoresClient";
 import { Link } from 'react-router-dom';
 
 
@@ -18,6 +19,7 @@ export default function QuizEditor() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { quizzes } = useSelector((state: any) => state.quizReducer);
+    const [users, setUsers] = useState<any[]>([]);
     console.log("in quiz editor", cid, qid);
     const fetchQuizzes = async () => {
         const modules = await coursesClient.findQuizForCourse(cid as string);
@@ -30,6 +32,7 @@ export default function QuizEditor() {
     useEffect(() => {
         console.log("in editor",quizzes, quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid))
         const newQuiz = quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid)[0] ?? {
+            _id: "",
             title: "",
             description: "",
             points: 0,
@@ -59,6 +62,7 @@ export default function QuizEditor() {
     
     // Initialize state with assignment values
     const [quiz, setQuiz] = useState({
+        _id: "",
         title: "",
         description: "",
         points: 0,
@@ -83,6 +87,13 @@ export default function QuizEditor() {
         questionNumber: 0,
         courseId: cid
     });
+
+    const [score, setScore] = useState({
+        userId: "",
+        quizId: "",
+        attempts: 0,
+        score: 0,
+      });
     
       useEffect(() => {
         if (quizzes.length > 0 && qid) {
@@ -132,10 +143,23 @@ export default function QuizEditor() {
         //console.log("New assignment: ", assignment_1)
         // const newAssignment = { name: assignmentName, course: cid };
         const quiz = await coursesClient.createQuizForCourse(cid, quiz_1);
+
+
+        
         //console.log("New Assignment return from api call:", assignment); // Debug Redux update
         dispatch(addQuiz(quiz));
     };
-      
+
+    const findUsersForCourse = async () => {
+        try {
+            if (!cid) return;
+            const users = await coursesClient.findUsersForCourse(cid);
+            setUsers(users);
+        } catch (error) {
+            console.error(error);
+        }
+        };
+    
     
     const handleSave = async () => {
         if (
@@ -207,7 +231,34 @@ export default function QuizEditor() {
         } else {
           // Else create a new assignment
           try {
+            console.log("creating quiz");
             createQuizForCourse(cid, quiz);
+            if (!cid) return;
+            console.log("creating scores");
+            console.log("getting users in course");
+            const users = await coursesClient.findUsersForCourse(cid);
+            findUsersForCourse();
+
+            // Create a score for each user
+            for (const user of users) {
+              const newScore = {
+                quizId: quiz._id,
+                userId: user._id,
+                attempts: 0,
+                score: 0,
+              };
+              console.log("adding score for user");
+
+              // Send the score to the backend
+              try {
+                await scoresClient.add(newScore);
+              } catch (error) {
+                console.log(`could not add score: ${error}`);
+              }
+              
+            }   
+            
+            
             // createAssignmentForCourse(assignmentData)
            // console.log("New assignment created:", assignmentData);
           } catch (error) {

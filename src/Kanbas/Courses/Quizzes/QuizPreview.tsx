@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {addQuestion, setQuestions, updateQuestion} from "../Questions/reducer";
 import * as questionsClient from "../Questions/client";
 export default function QuizPreview(){
-
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { cid, qid, questid } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -28,6 +28,13 @@ export default function QuizPreview(){
         console.log("Editing quiz");
         navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor`);
       };
+
+    const submitAnswers = () => {
+        //save answers
+
+        //
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail`)
+    }
    
 
 
@@ -115,12 +122,15 @@ return (
       ) : (
         <p>Loading questions...</p>
       )}
-      <button className="btn btn-danger me-2">
+      <button className="btn btn-danger me-2" onClick={submitAnswers}>
                Submit
         </button>
-      <button className="btn btn-danger" onClick={handleEdit}>
-                Continue Editing this Quiz
-        </button>
+        {currentUser.role === "FACULTY" && (
+            <button className="btn btn-danger" onClick={handleEdit}>
+            Continue Editing this Quiz
+            </button>
+        )}
+      
              </div>
             </div>
             

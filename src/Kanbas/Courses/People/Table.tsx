@@ -4,7 +4,7 @@ import PeopleDetails from "./Details";
 import * as coursesClient from "../../Courses/client";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import * as accountClient from "../../Account/client";
 
 
 // import { useParams } from "react-router-dom";
@@ -15,9 +15,15 @@ export default function PeopleTable() {
   const [users, setUsers] = useState<any[]>([]);
   // const { users, enrollments } = db;
   const fetchUsers= async () => {
-    const users = await coursesClient.findUsersForCourse(cid as string);
-    console.log(users, "in table index file")
-    setUsers(users);
+    if (cid) {
+      const users = await coursesClient.findUsersForCourse(cid as string);
+      console.log(users, "in table index file")
+      setUsers(users);
+    } else {
+      const users = await accountClient.findAllUsers();
+      setUsers(users);
+    }
+    
   };
   useEffect(() => {
     fetchUsers();

@@ -12,6 +12,7 @@ import LessonControlButtons from "../Modules/LessonControlButtons";
 import * as db from "../../Database";
 import * as quizzesClient from "./client";
 import * as coursesClient from "../client";
+import { IoEllipsisVertical } from "react-icons/io5";
 
 import { addQuiz, deleteQuiz, updateQuiz, setQuizzes, editQuiz } from "./reducer";
 
@@ -87,8 +88,8 @@ export default function Quizzes() {
                             <div className="wd-quiz-list-item p-3 ps-2 wd-lesson">
                                 <div className="d-flex justify-content-between align-items-center mb-2">
                                     <div className="d-flex align-items-center">
-                                        <AssignmentPrefixButtons />
-                                        {/* {currentUser.role === "FACULTY" ? ( */}
+                                        {/*<AssignmentPrefixButtons />*/}
+                                        {currentUser.role === "FACULTY" ? ( 
                                             <Link
                                                 // to={`/Kanbas/Courses/${cid}/Quizzes/Detail/${quiz._id}`}
                                                 to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Detail`}
@@ -97,14 +98,14 @@ export default function Quizzes() {
                                                 <span className="ms-2 text-start">{quiz.title} </span>
                                                 <span>{quiz.published === true ? '✅' : '🚫'}</span>
                                             </Link>
-                                        {/* ) : (
+                                        ) : (
                                             <Link
-                                                to={`/Kanbas/Courses/${cid}/Quizzes/Detail/${quiz._id}`}
+                                                to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Detail`}
                                                 className="text-decoration-none text-black"
                                             >
                                                 <span className="ms-2 text-start">{quiz.title}</span>
-                                            </Link> */}
-                                        {/* )} */}
+                                            </Link> 
+                                        )} 
 
 
                                     </div>
@@ -115,8 +116,8 @@ export default function Quizzes() {
                                                         //   deleteQuiz={removeQuiz} 
                                                           courseId = {quiz.course}/>
                                     ) : (
-                                        <LessonControlButtons/>
-
+                                        //<LessonControlButtons/>
+                                        <IoEllipsisVertical/>
                                     )}
                                 </div>
 

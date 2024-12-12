@@ -16,6 +16,7 @@ export const deleteQuiz = async (quizId: string) => {
  return response.data;
 };
 
+
 // export const fetchAllCourses = async () => {
 //     const { data } = await axiosWithCredentials.get(COURSES_API);
 //     return data;

@@ -7,13 +7,16 @@ import { setQuizzes, updateQuiz } from "./reducer";
 import * as coursesClient from "../client";
 import { queryByDisplayValue } from '@testing-library/react';
 import * as quizzesClient from "./client";
+import {setScores, addScore, addAttempt } from "./scoreReducer";
+import * as scoresClient from "./scoresClient";
 
 function QuizDetailsScreen() {
     const { cid, qid } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { quizzes } = useSelector((state: any) => state.quizReducer);
-
+    const { scores } = useSelector((state: any) => state.scoreReducer);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
 
     const fetchQuizzes = async () => {
         const modules = await coursesClient.findQuizForCourse(cid as string);
@@ -22,6 +25,14 @@ function QuizDetailsScreen() {
       useEffect(() => {
         fetchQuizzes();
       }, []);
+
+    const fetchScores = async () => {
+      const score = await scoresClient.getScores();
+      dispatch(setScores(score));
+    };
+    useEffect(() => {
+      fetchScores();
+    }, []);
     
     useEffect(() => {
         console.log("in editor",quizzes, quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid))
@@ -52,6 +63,16 @@ function QuizDetailsScreen() {
         }
         setQuiz(newQuiz)
       }, [quizzes]);
+
+      useEffect(() => {
+        const newScore = scores.filter((score: { _id: string, userId: string, quizId: string }) => score.quizId === qid && score.userId == currentUser.uid)[0] ?? {
+            userId: "",
+            quizId: "",
+            attempts: 0,
+            score: 0,
+        }
+        setScore(newScore)
+      }, [scores]);
     
     // Initialize state with assignment values
     const [quiz, setQuiz] = useState({
@@ -79,6 +100,13 @@ function QuizDetailsScreen() {
         questionNumber: 0,
         courseId: cid
     });
+
+    const [score, setScore] = useState({
+      userId: "",
+      quizId: "",
+      attempts: 0,
+      score: 0,
+    });
     
       useEffect(() => {
         if (quizzes.length > 0 && qid) {
@@ -88,6 +116,23 @@ function QuizDetailsScreen() {
           if (selectedQuiz) setQuiz(selectedQuiz);
         }
       }, [quizzes, qid]);
+
+      useEffect(() => {
+        if (scores.length > 0 && currentUser.uid && qid) {
+          const usersScore = scores.find(
+            (score: {quizId: string, userId: string}) => score.quizId === qid && score.userId === currentUser.uid
+          );
+          if (usersScore) setScore(usersScore);
+        } else {
+          const newScore = {
+            userId: currentUser.id,
+            quizId: qid,
+            attempts: 0,
+            score: 0,
+          };
+          addScore(newScore);
+        }
+      }, [scores]);
  
 
   const handlePreview = () => {
@@ -96,6 +141,19 @@ function QuizDetailsScreen() {
     navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Preview`);
 
   };
+
+  const startQuizForUser = async (quiz: any) => {
+    // update quiz info for user / create quizForUser
+    try {
+      await scoresClient.update(quiz._id, currentUser.uid);
+    } catch (error){
+      // create new quiz info for user
+      console.log("error updating num attempts for user")
+    }
+    // if multipleAttempts == true 
+    // navigate to quiz preview screen to take quiz
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Preview`)
+  }
 
   const handleEdit = () => {
     // Logic to navigate to quiz editor screen
@@ -135,100 +193,112 @@ function QuizDetailsScreen() {
 
   return (
     <div>
-        <div className="d-flex justify-content-center align-items-center">
-            <button className="btn btn-secondary me-2" onClick={handlePreview}>
-                Preview
-            </button>
-            <button className="btn btn-danger" onClick={handleEdit}>
-                Edit
-            </button>
-        </div>
-        <div className="d-flex justify-content-center">
-        <table>
-            <tbody>
+      {currentUser.role === "FACULTY" ? (
+        <div>
+          <div className="d-flex justify-content-center align-items-center">
+              <button className="btn btn-secondary me-2" onClick={handlePreview}>
+                  Preview
+              </button>
+              <button className="btn btn-danger" onClick={handleEdit}>
+                  Edit
+              </button>
+          </div>
+          <div className="d-flex justify-content-center">
+          <table>
+              <tbody>
+                <tr>
+                  <td>
+                  <h3>Quiz Details: </h3>
+                  </td>
+                </tr>
               <tr>
-                <td>
-                <h3>Quiz Details: </h3>
-                </td>
+                  <td><strong>Quiz Title:</strong></td>
+                  <td>{quiz.title}</td>
               </tr>
-            <tr>
-                <td><strong>Quiz Title:</strong></td>
-                <td>{quiz.title}</td>
-            </tr>
-            <tr>
-                <td><strong>Quiz Type:</strong></td>
-                <td>{quiz.type}</td>
-            </tr>
-            <tr>
-                <td><strong>Points:</strong></td>
-                <td>{quiz.points}</td>
-            </tr>
-            <tr>
-                <td><strong>Assignment Group:</strong></td>
-                <td>{quiz.group}</td>
-            </tr>
-            <tr>
-                <td><strong>Shuffle Answers:</strong></td>
-                <td>{quiz.shuffleAnswers ? 'Yes' : 'No'}</td>
-            </tr>
-            <tr>
-                <td><strong>Time Limit:</strong></td>
-                <td>{quiz.timelimit} Minutes</td>
-            </tr>
-            <tr>
-                <td><strong>Multiple Attempts:</strong></td>
-                <td>{quiz.multipleAttempts ? 'Yes' : 'No'}</td>
-            </tr>
-            <tr>
-                <td><strong>Attempts:</strong></td>
-                <td>{quiz.numAttempts}</td>
-            </tr>
-            <tr>
-                <td><strong>Show Correct Answers:</strong></td>
-                <td>{quiz.showAnswers ? 'Yes' : 'No'}</td>
-            </tr>
-            <tr>
-                <td><strong>Access Code:</strong></td>
-                <td>{quiz.accessCode || 'Blank'}</td>
-            </tr>
-            <tr>
-                <td><strong>One Question at a Time:</strong></td>
-                <td>{quiz.oneQuestionataTime ? 'Yes' : 'No'}</td>
-            </tr>
-            <tr>
-                <td><strong>Webcam Required:</strong></td>
-                <td>{quiz.webCam ? 'Yes' : 'No'}</td>
-            </tr>
-            <tr>
-                <td><strong>Lock Questions After Answering:</strong></td>
-                <td>{quiz.lockQuestion ? 'Yes' : 'No'}</td>
-            </tr>
-            <tr>
-                <td><strong>Due Date:</strong></td>
-                <td>{new Date(quiz.dueDate).toLocaleDateString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric'
-                    })}</td>
-            </tr>
-            <tr>
-                <td><strong>Available Date:</strong></td>
-                <td>{new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric'
-                    })}</td>
-            </tr>
-            <tr>
-                <td><strong>Until Date:</strong></td>
-                <td>{new Date(quiz.availableUntilDate).toLocaleDateString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric'
-                    })}</td>
-            </tr>
-            </tbody>
-        </table>
-      </div>
-     
-      <div className="d-flex justify-content-center align-items-center">
-        <button className="btn btn-secondary me-2" onClick={() => handlePublishQuiz(qid)}>{quiz.published ? 'Unpublish' : 'Publish'}</button>
-        <button className="btn btn-secondary me-2" onClick={handleExit}>Back</button>
-      </div>
+              <tr>
+                  <td><strong>Quiz Type:</strong></td>
+                  <td>{quiz.type}</td>
+              </tr>
+              <tr>
+                  <td><strong>Points:</strong></td>
+                  <td>{quiz.points}</td>
+              </tr>
+              <tr>
+                  <td><strong>Assignment Group:</strong></td>
+                  <td>{quiz.group}</td>
+              </tr>
+              <tr>
+                  <td><strong>Shuffle Answers:</strong></td>
+                  <td>{quiz.shuffleAnswers ? 'Yes' : 'No'}</td>
+              </tr>
+              <tr>
+                  <td><strong>Time Limit:</strong></td>
+                  <td>{quiz.timelimit} Minutes</td>
+              </tr>
+              <tr>
+                  <td><strong>Multiple Attempts:</strong></td>
+                  <td>{quiz.multipleAttempts ? 'Yes' : 'No'}</td>
+              </tr>
+              <tr>
+                  <td><strong>Attempts:</strong></td>
+                  <td>{quiz.numAttempts}</td>
+              </tr>
+              <tr>
+                  <td><strong>Show Correct Answers:</strong></td>
+                  <td>{quiz.showAnswers ? 'Yes' : 'No'}</td>
+              </tr>
+              <tr>
+                  <td><strong>Access Code:</strong></td>
+                  <td>{quiz.accessCode || 'Blank'}</td>
+              </tr>
+              <tr>
+                  <td><strong>One Question at a Time:</strong></td>
+                  <td>{quiz.oneQuestionataTime ? 'Yes' : 'No'}</td>
+              </tr>
+              <tr>
+                  <td><strong>Webcam Required:</strong></td>
+                  <td>{quiz.webCam ? 'Yes' : 'No'}</td>
+              </tr>
+              <tr>
+                  <td><strong>Lock Questions After Answering:</strong></td>
+                  <td>{quiz.lockQuestion ? 'Yes' : 'No'}</td>
+              </tr>
+              <tr>
+                  <td><strong>Due Date:</strong></td>
+                  <td>{new Date(quiz.dueDate).toLocaleDateString('en-US', {
+                      month: 'short', day: 'numeric', year: 'numeric'
+                      })}</td>
+              </tr>
+              <tr>
+                  <td><strong>Available Date:</strong></td>
+                  <td>{new Date(quiz.availableFromDate).toLocaleDateString('en-US', {
+                      month: 'short', day: 'numeric', year: 'numeric'
+                      })}</td>
+              </tr>
+              <tr>
+                  <td><strong>Until Date:</strong></td>
+                  <td>{new Date(quiz.availableUntilDate).toLocaleDateString('en-US', {
+                      month: 'short', day: 'numeric', year: 'numeric'
+                      })}</td>
+              </tr>
+              </tbody>
+          </table>
+        </div>
+      
+        <div className="d-flex justify-content-center align-items-center">
+          <button className="btn btn-secondary me-2" onClick={() => handlePublishQuiz(qid)}>{quiz.published ? 'Unpublish' : 'Publish'}</button>
+          <button className="btn btn-secondary me-2" onClick={handleExit}>Back</button>
+        </div>
+        </div>
+      ) : (
+        <div className="d-flex justify-content-center align-items-center" onClick={() => startQuizForUser(qid)}>
+          {quiz.numAttempts > score.attempts}
+          <button className="btn btn-secondary me-2">
+            Start Quiz
+          </button>
+        </div>
+      )}
+      
     </div>
   );
 }
