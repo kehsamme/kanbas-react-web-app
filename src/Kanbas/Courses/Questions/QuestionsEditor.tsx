@@ -136,7 +136,7 @@ export default function QuestionEditor() {
             title: question.title || "",
             points: question.points || 0, // Default to 0 points if not provided
             question: question.question || "", // The question text
-            options: question.options || [], // Default to an empty array if no options
+            options: question.options || ["True",  "False"], // Default to an empty array if no options
             answers: question.answers || [], // Default to an empty string if no answers provided
         };
         
@@ -218,7 +218,7 @@ export default function QuestionEditor() {
             </div>
             
             <div className="mb-3">
-                <label htmlFor="wd-answer" className="form-label">Answer</label>
+                <label htmlFor="wd-answer" className="form-label">Options</label>
 
                 {/* Render True/False options */}
                 {question.questionType === "TF" && (
@@ -226,7 +226,8 @@ export default function QuestionEditor() {
                         id="wd-answer"
                         className="form-select"
                         value={question.answers}
-                        onChange={(e) => setQuestion({ ...question, answers: [e.target.value] })}
+                        onChange={(e) => setQuestion({ ...question, answers: [e.target.value] })
+                    }
                     >
                         <option value="True">True</option>
                         <option value="False">False</option>
@@ -247,6 +248,7 @@ export default function QuestionEditor() {
                                         const updatedOptions = [...question.options];
                                         updatedOptions[index] = e.target.value;
                                         setQuestion({ ...question, options: updatedOptions });
+                                       
                                     }}
                                 />
                                 <button
@@ -272,7 +274,7 @@ export default function QuestionEditor() {
                         </button>
                     </div>
                 )}
-                 {question.questionType === "BLANKS" && (
+                 {/* {question.questionType === "BLANKS" && (
                     <div>
                         {question.options.map((option, index) => (
                             <div key={index} className="mb-2 d-flex align-items-center">
@@ -306,23 +308,94 @@ export default function QuestionEditor() {
                                 setQuestion({ ...question, options: [...question.options, ""] })
                             }
                         >
+                            Add Answer Option
+                        </button>
+                    </div>
+                )} */}
+
+
+
+            </div>
+            <div className="mb-3">
+                <label htmlFor="wd-answer" className="form-label">Answer</label>
+
+                {/* Render Multiple Choice Options */}
+                {question.questionType === "MC" && (
+                    <div>
+                        {question.answers.map((answer, index) => (
+                            <div key={index} className="mb-2 d-flex align-items-center">
+                                <input
+                                    type="text"
+                                    className="form-control me-2"
+                                    placeholder={`Answer ${index + 1}`}
+                                    value={answer}
+                                    onChange={(e) => {
+                                        const updatedAnswers = [...question.answers];
+                                        updatedAnswers[index] = e.target.value;
+                                        setQuestion({ ...question, answers: updatedAnswers });
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() => {
+                                        const updatedAnswers = question.answers.filter((_, i) => i !== index);
+                                        setQuestion({ ...question, answers: updatedAnswers });
+                                    }}
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() =>
+                                setQuestion({ ...question, answers: [...question.answers, ""] })
+                            }
+                        >
+                            Add Answer
+                        </button>
+                    </div>
+                )}
+                 {question.questionType === "BLANKS" && (
+                    <div>
+                        {question.answers.map((answer, index) => (
+                            <div key={index} className="mb-2 d-flex align-items-center">
+                                <input
+                                    type="text"
+                                    className="form-control me-2"
+                                    placeholder={`Possible Anwer ${index + 1}`}
+                                    value={answer}
+                                    onChange={(e) => {
+                                        const updatedAnswers = [...question.answers];
+                                        updatedAnswers[index] = e.target.value;
+                                        setQuestion({ ...question, answers: updatedAnswers });
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() => {
+                                        const updatedAnswers = question.answers.filter((_, i) => i !== index);
+                                        setQuestion({ ...question, answers: updatedAnswers });
+                                    }}
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() =>
+                                setQuestion({ ...question, answers: [...question.answers, ""] })
+                            }
+                        >
                             Add Possible Answer
                         </button>
                     </div>
                 )}
-
-
-                {/* Render Fill in the Blank */}
-                {/* {question.questionType === "Fill in the Blank" && (
-                    <input
-                        type="text"
-                        id="wd-answer"
-                        className="form-control"
-                        placeholder="Enter the correct answer"
-                        value={question.answers}
-                        // onChange={(e) => setQuestion({ ...question, answers: e.target.value })}
-                    />
-                )} */}
             </div>
        
             

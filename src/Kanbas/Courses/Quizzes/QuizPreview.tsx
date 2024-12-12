@@ -1,6 +1,129 @@
+import "../../../Labs/Lab2/index.css";
+import React, {useEffect, useState} from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate, useParams} from "react-router";
+import {useDispatch, useSelector} from "react-redux";
+import {addQuestion, setQuestions, updateQuestion} from "../Questions/reducer";
+import * as questionsClient from "../Questions/client";
 export default function QuizPreview(){
 
+    const { cid, qid, questid } = useParams();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const { questions } = useSelector((state: any) => state.questionReducer);
+    console.log("right before fetch questions")
+    const fetchQuestions = async () => {
+        const questions = await questionsClient.findQuestionForQuiz(qid as string);
+        dispatch(setQuestions(questions));
+        console.log("find questions for quiz preview", questions)
+      };
+
+      useEffect(() => {
+        fetchQuestions();
+      }, [qid]);
+    
+    const handleEdit = () => {
+        // Logic to navigate to quiz editor screen
+        console.log("Editing quiz");
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor`);
+      };
+   
+
+
 return (
+    <div>
     <h1>Quiz Preview</h1>
+    <p id="wd-id-selector-1">
+             ! This is a preview of the published quiz.
+    </p>
+    <div>
+      {questions && questions.length > 0 ? (
+        questions.map((question: any, index: any) => (
+          <div key={index}>
+            <div id="wd-css-responsive-forms-1">
+            <div id="wd-bs-grid-system">
+                <div className="row">
+                    <div className="col-11 ">
+                    <h4>Question {index + 1}</h4>
+                    </div>
+                    <div className="col-1 ">
+                    <p>{question.points} Points</p>
+                    </div>
+                </div>
+                </div>
+            <div className="mb-3 row">
+                <label htmlFor="textarea2"
+                    className="col-form-label">
+                 {question.question} </label>
+            </div>
+            {question.questionType === "BLANKS" && (
+            <div key={index} className="mb-2 d-flex align-items-center">
+                    <input
+                        type="text"
+                        className="form-control me-2"
+                        placeholder={`Enter Response`}
+                        value={question.option}
+                    />
+                </div>
+            )}
+            </div>
+            {question.questionType === "MC" && (
+                
+                <fieldset className="row mb-3">
+                <div className="col-sm-10">
+                    <div className="form-check">
+                    <input className="form-check-input" type="radio"
+                        name={question._id} id="r3" value="option1" />
+                    <label className="form-check-label" htmlFor="r3">
+                        {question.options[0]}</label> </div>
+                    <div className="form-check">
+                    <input className="form-check-input" type="radio"
+                        name={question._id} id="r4" value="option2" />
+                    <label className="form-check-label" htmlFor="r4">
+                    {question["options"][1]}</label> </div>
+                    <div className="form-check">
+                    <input className="form-check-input" type="radio"
+                        name={question._id} id="r5" value="option3" />
+                    <label className="form-check-label" htmlFor="r5">
+                    {question["options"][2]} </label> </div>
+                </div>
+                </fieldset>
+               
+                
+            )}
+             {question.questionType === "TF" && (
+                <div className="mb-3">
+                <fieldset className="row mb-3">
+                <div className="col-sm-10">
+                    <div className="form-check">
+                    <input className="form-check-input" type="radio"
+                        name={question._id} id="r3" value="option1" />
+                    <label className="form-check-label" htmlFor="r3">
+                        True </label> </div>
+                    <div className="form-check">
+                    <input className="form-check-input" type="radio"
+                        name={question._id} id="r4" value="option2" />
+                    <label className="form-check-label" htmlFor="r4">
+                        False </label> </div>
+                </div>
+                </fieldset>
+            </div>
+             )}
+            </div>
+        ))
+      ) : (
+        <p>Loading questions...</p>
+      )}
+      <button className="btn btn-danger me-2">
+               Submit
+        </button>
+      <button className="btn btn-danger" onClick={handleEdit}>
+                Continue Editing this Quiz
+        </button>
+             </div>
+            </div>
+            
+
 
 )};
