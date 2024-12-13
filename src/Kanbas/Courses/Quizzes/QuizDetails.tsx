@@ -41,7 +41,7 @@ function QuizDetailsScreen() {
             description: "",
             points: 0,
             type: "Graded Quiz",
-            published: true,
+            published: false,
             group: "QUIZZES",
             number: `Q${quizzes.length + 1}`,
             shuffleAnswers: false,
@@ -80,7 +80,7 @@ function QuizDetailsScreen() {
         description: "",
         points: 0,
         type: "Graded Quiz",
-        published: true,
+        published: false,
         group: "QUIZZES",
         number: `Q${quizzes.length + 1}`,
         shuffleAnswers: false,
@@ -118,21 +118,30 @@ function QuizDetailsScreen() {
       }, [quizzes, qid]);
 
       useEffect(() => {
-        if (scores.length > 0 && currentUser.uid && qid) {
+        if (qid) {
           const usersScore = scores.find(
-            (score: {quizId: string, userId: string}) => score.quizId === qid && score.userId === currentUser.uid
+            (score: {quizId: string, userId: string}) => score.quizId === qid && score.userId === currentUser._id
           );
-          if (usersScore) setScore(usersScore);
-        } else {
-          const newScore = {
-            userId: currentUser.id,
-            quizId: qid,
-            attempts: 0,
-            score: 0,
+          if (usersScore) {
+            console.log("retrieved user's score");
+            setScore(usersScore)
+          } 
+          else {
+            console.log("couldn't find user's score");
+            const newScore = {
+              userId: currentUser.id,
+              quizId: qid,
+              attempts: 0,
+              score: 0,
+            };
+            addScore(newScore);
           };
-          addScore(newScore);
+        } else {
+          
         }
       }, [scores]);
+
+
  
 
   const handlePreview = () => {
@@ -149,6 +158,7 @@ function QuizDetailsScreen() {
     } catch (error){
       // create new quiz info for user
       console.log("error updating num attempts for user")
+      
     }
     // if multipleAttempts == true 
     // navigate to quiz preview screen to take quiz

@@ -132,7 +132,7 @@ export default function QuestionEditor() {
             _id: questid || `${new Date().getTime()}`, // Generate a unique ID for new questions
             number: question.number || `Q${new Date().getTime()}`, // Automatically generate number if not provided
             quiz: question.quiz || qid, // Assuming qid is the ID of the associated quiz
-            questionType: question.questionType || "MC", // Default question type as Multiple Choice
+            questionType: question.questionType || "TF", // Default question type as True False
             title: question.title || "",
             points: question.points || 0, // Default to 0 points if not provided
             question: question.question || "", // The question text
