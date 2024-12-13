@@ -64,7 +64,7 @@ export default function QuestionEditor() {
     }>({
         title: "",
         points: 0,
-        questionType: "True False",
+        questionType: "TF",
         number: `M${questions.length + 1}`,
         quiz: "dummy_id",
         question: "",
@@ -76,8 +76,8 @@ export default function QuestionEditor() {
         setQuestion({
             ...question,
             questionType: selectedType,
-            answers: selectedType === "Multiple Choice" ? [""] : [], // Initialize answers differently based on type
-            options: selectedType === "Multiple Choice" ? ["Option 1", "Option 2",  "Option 3"] : [], // Add placeholder options for multiple choice
+            answers: [], // Initialize answers differently based on type
+            options: selectedType === "TF" ? ["True", "False"] : [], // Add placeholder options for multiple choice
         });
     };
     
@@ -97,7 +97,7 @@ export default function QuestionEditor() {
     const [number, setQuestionNumber] = useState(`M${questions.length + 1}`); // Dynamic question number
     const [quiz, setQuestionQuizId] = useState(""); // Associated quiz ID
     const [questionText, setQuestionText] = useState(""); 
-    const [questionOptions, setQuestionOptions] = useState(); 
+    const [questionOptions, setQuestionOptions] = useState(""); 
     const [questionAnswers, setQuestionAnswers] = useState(""); 
     
 
