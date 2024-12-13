@@ -220,19 +220,7 @@ export default function QuestionEditor() {
             <div className="mb-3">
                 <label htmlFor="wd-answer" className="form-label">Options</label>
 
-                {/* Render True/False options */}
-                {question.questionType === "TF" && (
-                    <select
-                        id="wd-answer"
-                        className="form-select"
-                        value={question.answers}
-                        onChange={(e) => setQuestion({ ...question, answers: [e.target.value] })
-                    }
-                    >
-                        <option value="True">True</option>
-                        <option value="False">False</option>
-                    </select>
-                )}
+                
 
                 {/* Render Multiple Choice Options */}
                 {question.questionType === "MC" && (
@@ -319,7 +307,20 @@ export default function QuestionEditor() {
             <div className="mb-3">
                 <label htmlFor="wd-answer" className="form-label">Answer</label>
 
-                {/* Render Multiple Choice Options */}
+                {/* Render True/False answers */}
+                {question.questionType === "TF" && (
+                    <select
+                        id="wd-answer"
+                        className="form-select"
+                        value={question.answers}
+                        onChange={(e) => setQuestion({ ...question, answers: [e.target.value] })
+                    }
+                    >
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                )}
+                {/* Render Multiple Choice answers */}
                 {question.questionType === "MC" && (
                     <div>
                         {question.answers.map((answer, index) => (

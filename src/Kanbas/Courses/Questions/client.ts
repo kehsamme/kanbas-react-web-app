@@ -41,4 +41,3 @@ export const fetchAllQuestions = async () => {
     console.log("client find questions", data);
     return data;
   };
-
