@@ -97,7 +97,7 @@ export default function QuestionEditor() {
     const [number, setQuestionNumber] = useState(`M${questions.length + 1}`); // Dynamic question number
     const [quiz, setQuestionQuizId] = useState(""); // Associated quiz ID
     const [questionText, setQuestionText] = useState(""); 
-    const [questionOptions, setQuestionOptions] = useState(""); 
+    const [questionOptions, setQuestionOptions] = useState(); 
     const [questionAnswers, setQuestionAnswers] = useState(""); 
     
 
