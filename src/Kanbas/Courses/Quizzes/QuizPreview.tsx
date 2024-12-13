@@ -25,10 +25,55 @@ export default function QuizPreview(){
     
     const handleEdit = () => {
         // Logic to navigate to quiz editor screen
-        console.log("Editing quiz");
+        console.log("navigte to Editing quiz");
         navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Editor`);
       };
+    
+    const [score, setScore] = useState(0);
+    const [answers, setAnswers] = useState<{ [key: number]: string }>({});
 
+
+  // Handle answer selection (now supporting multiple selections for MC questions)
+  
+  const handleAnswerChange = (questionId: number, selectedValue: string) => {
+    setAnswers((prevAnswers) => {
+      const updatedAnswers = {
+        ...prevAnswers,
+        [questionId]: selectedValue,  // Ensure the selected answer is correctly updated
+      };
+      console.log("Updated answers:", updatedAnswers);  // Log to ensure it's updating correctly
+      return updatedAnswers;
+    });
+  };
+  // Calculate score on submit
+  const handleSubmit = () => {
+    let newScore = 0;
+    console.log("Selected Answers:", answers);
+
+    questions.forEach((question: any) => {
+      const selectedAnswer = answers[question._id];
+
+      // Log answers object and question ID for debugging
+      console.log(`Checking question: ${question._id}`);
+      console.log("Selected answer:", selectedAnswer);
+      console.log("Correct answers:", question.answers);
+
+      // Check if the selected answer matches one of the correct answers
+      if (Array.isArray(question.answers)) {
+        if (question.answers.includes(selectedAnswer)) {
+          newScore += question.points; // Add points for correct answers
+        }
+      } else {
+        // Single correct answer case
+        if (selectedAnswer === question.answers) {
+          newScore += question.points; // Add points for correct answers
+        }
+      }
+    });
+
+    setScore(newScore); // Update the score
+  };
+ 
     const submitAnswers = () => {
         //save answers
 
@@ -60,9 +105,9 @@ return (
                 </div>
                 </div>
             <div className="mb-3 row">
-                <label htmlFor="textarea2"
-                    className="col-form-label">
-                 {question.question} </label>
+                <option value={question.option}
+                    className="col-form-option">
+                 {question.question} </option>
             </div>
             {question.questionType === "BLANKS" && (
             <div key={index} className="mb-2 d-flex align-items-center">
@@ -71,6 +116,7 @@ return (
                         className="form-control me-2"
                         placeholder={`Enter Response`}
                         value={question.option}
+                        onChange={(e) => handleAnswerChange(question._id, e.target.value)}
                     />
                 </div>
             )}
@@ -81,50 +127,91 @@ return (
                 <div className="col-sm-10">
                     <div className="form-check">
                     <input className="form-check-input" type="radio"
-                        name={question._id} id="r3" value="option1" />
-                    <label className="form-check-label" htmlFor="r3">
+                        name={question._id} id="r3" value={question.options[0]}
+                       onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
+                    <label className="form-check-option" >
                         {question.options[0]}</label> </div>
                     <div className="form-check">
                     <input className="form-check-input" type="radio"
-                        name={question._id} id="r4" value="option2" />
-                    <label className="form-check-label" htmlFor="r4">
+                        name={question._id} id="r4" value= {question.options[1]} onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
+                    <label className="form-check-label" >
                     {question["options"][1]}</label> </div>
                     <div className="form-check">
                     <input className="form-check-input" type="radio"
-                        name={question._id} id="r5" value="option3" />
-                    <label className="form-check-label" htmlFor="r5">
+                        name={question._id} id="r5" value= {question.options[2]} onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
+                    <label className="form-check-label" >
                     {question["options"][2]} </label> </div>
                 </div>
                 </fieldset>
                
                 
             )}
-             {question.questionType === "TF" && (
+             {/* {question.questionType === "TF" && (
                 <div className="mb-3">
                 <fieldset className="row mb-3">
                 <div className="col-sm-10">
                     <div className="form-check">
                     <input className="form-check-input" type="radio"
-                        name={question._id} id="r3" value="option1" />
-                    <label className="form-check-label" htmlFor="r3">
-                        True </label> </div>
+                        name={question._id} id="r3" value="True" onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
+                    <option className="form-check-option"value="True">
+                        True </option> </div>
                     <div className="form-check">
                     <input className="form-check-input" type="radio"
-                        name={question._id} id="r4" value="option2" />
-                    <label className="form-check-label" htmlFor="r4">
-                        False </label> </div>
+                        name={question._id} id="r4" value="False" onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
+                    <option className="form-check-option" value="False" >
+                        False </option> </div>
                 </div>
                 </fieldset>
             </div>
-             )}
+             )} */}
+             {question.questionType === "TF" && (
+                <div className="mb-3">
+                    <fieldset className="row mb-3">
+                    <div className="col-sm-10">
+                        <div className="form-check">
+                        <input
+                            className="form-check-input"
+                            type="radio"
+                            name={question._id}
+                            id="r3"
+                            value="True"
+                            onChange={(e) => handleAnswerChange(question._id, e.target.value)}
+                            checked={answers[question._id] === "True"}
+
+                        />
+                        <label className="form-check-label" htmlFor="r3">
+                            True
+                        </label>
+                        </div>
+                        <div className="form-check">
+                        <input
+                            className="form-check-input"
+                            type="radio"
+                            name={question._id}
+                            id="r4"
+                            value="False"
+                            onChange={(e) => handleAnswerChange(question._id, e.target.value)}
+                            checked={answers[question._id] === "False"}
+                        />
+                        <label className="form-check-label" htmlFor="r4">
+                            False
+                        </label>
+                        </div>
+                    </div>
+                    </fieldset>
+                </div>
+                )}
             </div>
         ))
       ) : (
         <p>Loading questions...</p>
       )}
-      <button className="btn btn-danger me-2" onClick={submitAnswers}>
+      <button className="btn btn-danger me-2" onClick={handleSubmit}>
                Submit
         </button>
+        <div>
+        <h3>Your Score: {score}</h3>
+      </div>
         {currentUser.role === "FACULTY" && (
             <button className="btn btn-danger" onClick={handleEdit}>
             Continue Editing this Quiz
