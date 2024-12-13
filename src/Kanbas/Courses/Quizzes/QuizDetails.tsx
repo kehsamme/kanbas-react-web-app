@@ -118,19 +118,26 @@ function QuizDetailsScreen() {
       }, [quizzes, qid]);
 
       useEffect(() => {
-        if (scores.length > 0 && currentUser.uid && qid) {
+        if (qid) {
           const usersScore = scores.find(
-            (score: {quizId: string, userId: string}) => score.quizId === qid && score.userId === currentUser.uid
+            (score: {quizId: string, userId: string}) => score.quizId === qid && score.userId === currentUser._id
           );
-          if (usersScore) setScore(usersScore);
-        } else {
-          const newScore = {
-            userId: currentUser.id,
-            quizId: qid,
-            attempts: 0,
-            score: 0,
+          if (usersScore) {
+            console.log("retrieved user's score");
+            setScore(usersScore)
+          } 
+          else {
+            console.log("couldn't find user's score");
+            const newScore = {
+              userId: currentUser.id,
+              quizId: qid,
+              attempts: 0,
+              score: 0,
+            };
+            addScore(newScore);
           };
-          addScore(newScore);
+        } else {
+          
         }
       }, [scores]);
  
@@ -143,17 +150,50 @@ function QuizDetailsScreen() {
   };
 
   const startQuizForUser = async (quiz: any) => {
-    // update quiz info for user / create quizForUser
     try {
-      await scoresClient.update(quiz._id, currentUser.uid);
-    } catch (error){
-      // create new quiz info for user
-      console.log("error updating num attempts for user")
+      // Find the user's score for the current quiz
+      const existingScore = scores.find(
+        (score: { _id: string; userId: string; quizId: string }) =>
+          score.userId === currentUser._id && score.quizId === qid
+      );
+  
+      if (existingScore) {
+        console.log("updating num attempts")
+        // Increment the attempts if the score exists
+        const updatedScore = {
+          ...existingScore,
+          attempts: existingScore.attempts + 1,
+        };
+  
+        // Update the score in the backend
+        await scoresClient.update(updatedScore, existingScore._id);
+  
+        // Dispatch the updated score to Redux
+        dispatch(addAttempt(updatedScore));
+        console.log("Score updated successfully:", updatedScore);
+      } else {
+        // Create a new score if it doesn't exist
+        const newScore = {
+          quizId: qid,
+          userId: currentUser._id,
+          attempts: 1, // First attempt
+          score: 0,    // Initial score
+        };
+  
+        // Save the new score to the backend
+        const createdScore = await scoresClient.add(newScore);
+  
+        // Dispatch the new score to Redux
+        dispatch(addScore(createdScore));
+        console.log("New score created successfully:", createdScore);
+      }
+  
+      // Navigate to the quiz preview screen
+      navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Preview`);
+    } catch (error) {
+      console.error("Error starting quiz:", error);
     }
-    // if multipleAttempts == true 
-    // navigate to quiz preview screen to take quiz
-    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Detail/Preview`)
-  }
+  };  
 
   const handleEdit = () => {
     // Logic to navigate to quiz editor screen
@@ -292,10 +332,17 @@ function QuizDetailsScreen() {
         </div>
       ) : (
         <div className="d-flex justify-content-center align-items-center" onClick={() => startQuizForUser(qid)}>
-          {quiz.numAttempts > score.attempts}
-          <button className="btn btn-secondary me-2">
-            Start Quiz
-          </button>
+          
+          {quiz.numAttempts > score.attempts ? 
+            <div>
+              <p>Number of attempts: {score.attempts}/{quiz.numAttempts}</p>
+              <button className="btn btn-secondary me-2">
+                Start Quiz
+              </button> 
+            </div> : 
+            <p>Number of attempts: {score.attempts}/{quiz.numAttempts}, Score: {score.score}</p>
+        }
+          
         </div>
       )}
       
@@ -304,119 +351,4 @@ function QuizDetailsScreen() {
 }
 
 export default QuizDetailsScreen;
-
-
-// import React, { useEffect } from 'react';
-// import { useParams, useLocation, useNavigate } from "react-router";
-// import { useSelector, useDispatch } from "react-redux";
-// import { useState } from 'react';
-// import { setQuizzes } from "./reducer"; 
-// // import { quizzes } from "../../Database";
-
-// import 'bootstrap/dist/css/bootstrap.min.css';
-
-// export default function QuizDetails() {
-//     const { cid, qid } = useParams();
-//     const navigate = useNavigate();
-//     const dispatch = useDispatch();
-//     const quizzes = useSelector((state: any) => state.quizReducer.quiz);
-//     const { currentUser } = useSelector((state: any) => state.accountReducer);
-//     const [quiz, setQuiz] = useState(quizzes.filter((quiz: { _id: string, title: string, course: string }) => quiz._id === qid))
-
-
-//     // const quizzes = useSelector((state: any) => state.quizReducer.quizzes); 
-//     const defaultQuiz = {
-//     title: "Quiz",
-//     description: "Description",
-//     points: 100,
-//     assigned_group: "QUIZZES",
-//     type: "GRADED",
-//     shuffle: "YES",
-//     time: 20,
-//     multipleAttempts: "NO",
-//     showAns: "Immediately",
-//     accessCode: "",
-//     oneAtATime: "YES",
-//     webcam: "NO",
-//     lock: "NO",
-//     due_date: "2024-11-13",
-//     until_date: "2024-11-13",
-//     available_date: "2024-11-13"
-//     };
-
-//     const { pathname } = useLocation();
-//     useEffect(() => {
-//         if (pathname.includes("Editor")) {
-//             dispatch(setQuizzes(defaultQuiz))
-//         } else {
-//             const existingQuiz = quizzes.find((q: any) => q._id === qid);
-//             if (existingQuiz) {
-//                 dispatch(setQuizzes(existingQuiz));
-//             }
-//         }
-//     }, [qid, quiz, dispatch, navigate, cid]);
-// //  STILL NEED TO FIX ERROS ON THE QUIZ PATHS AND QUIZ DETAILS
-
-//     return (
-    
-//         <div className="container mt-4" id="wd-quiz-details">
-//             {/* Check if the current user is a student */}
-//             {currentUser.role === "STUDENT" ? (
-//                 // Render content for students
-//                 <>
-//                     <h1>{quiz?.title || "Quiz Details"}</h1>
-//                     <button className='btn btn-danger btn-lg text-decoration-none text-white'>Take Quiz</button>
-//                 </>
-//             ) : (
-//                 // Render default quiz content for others (e.g., instructors)
-//                 <>
-//             <h1>{quiz?.title || "Quiz Details"}</h1>
-//             <div className="quiz-details">
-//                 <div className="quiz-detail">
-//                     <strong>Quiz Type:</strong> {quiz?.type}
-//                 </div>
-//                 <div className="quiz-detail">
-//                     <strong>Points:</strong> {quiz?.points}
-//                 </div>
-//                 <div className="quiz-detail">
-//                     <strong>Assignment Group:</strong> {quiz?.assigned_group}
-//                 </div>
-//                 <div className="quiz-detail">
-//                     <strong>Shuffle Answers:</strong> {quiz?.shuffle}
-//                 </div>
-//                 <div className="quiz-detail">
-//                     <strong>Time Limit:</strong> {quiz?.time} minutes
-//                 </div>
-//                 <div className="quiz-detail">
-//                     <strong>Multiple Attempts:</strong> {quiz?.multipleAttempts}
-//                 </div>
-//                 <div className="quiz-detail">
-//                     <strong>Show Correct Answers:</strong> {quiz?.showAns}
-//                 </div>
-//                 <div className="quiz-detail">
-//                     <strong>One Question at a Time:</strong> {quiz?.oneAtATime}
-//                 </div>
-//                 <div className="quiz-detail">
-//                     <strong>Webcam Required:</strong> {quiz?.webcam}
-//                 </div>
-//                 <div className="quiz-detail">
-//                     <strong>Lock Questions After Answering:</strong> {quiz?.lock}
-//                 </div>
-//             </div>
-//             <div className="quiz-dates">
-//                 <div className="quiz-date">
-//                     <strong>Due:</strong> {quiz?.due_date}
-//                 </div>
-//                 <div className="quiz-date">
-//                     <strong>Available from:</strong> {quiz?.available_date}
-//                 </div>
-//                 <div className="quiz-date">
-//                     <strong>Until:</strong> {quiz?.until_date}
-//                 </div>
-//             </div>
-//             </>
-//             )}
-//         </div>
-//     );
-// }
 

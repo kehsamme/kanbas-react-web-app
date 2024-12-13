@@ -6,8 +6,8 @@ const SCORES_API = `${REMOTE_SERVER}/api/scores`;
 
 
 
-export const update = async (score: any, userId: string) => {
-    const { data } = await axiosWithCredentials.put(`/${SCORES_API}/${score._id}`, score);
+export const update = async (score: any, scoreId: string) => {
+    const { data } = await axiosWithCredentials.put(`${SCORES_API}/${scoreId}`, score);
     return data;
   };  
 

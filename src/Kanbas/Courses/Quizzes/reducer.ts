@@ -47,6 +47,7 @@ const quizzesSlice = createSlice({
             shuffleAnswers: quiz.shuffleAnswers,
             timelimit: quiz.timelimit,
             multipleAttempts: quiz.multipleAttempts,
+            numAttempts: quiz.numAttempts,
             showAnswers: quiz.showAnswers,
             accessCode: quiz.accessCode,
             oneQuestionataTime: quiz.oneQuestionataTime,
