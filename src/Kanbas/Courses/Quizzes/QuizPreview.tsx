@@ -61,7 +61,8 @@ export default function QuizPreview(){
       // Check if the selected answer matches one of the correct answers
       if (Array.isArray(question.answers)) {
         if (question.answers.includes(selectedAnswer)) {
-          newScore += question.points; // Add points for correct answers
+          newScore += question.points;
+           // Add points for correct answers
         }
       } else {
         // Single correct answer case
@@ -86,9 +87,11 @@ export default function QuizPreview(){
 return (
     <div>
     <h1>Quiz Preview</h1>
+    {currentUser && currentUser.role === "FACULTY" && (
     <p id="wd-id-selector-1">
              ! This is a preview of the published quiz.
     </p>
+    )}
     <div>
       {questions && questions.length > 0 ? (
         questions.map((question: any, index: any) => (
@@ -146,61 +149,29 @@ return (
                
                 
             )}
-             {/* {question.questionType === "TF" && (
-                <div className="mb-3">
+           
+             {question.questionType === "TF" && (
+                
                 <fieldset className="row mb-3">
                 <div className="col-sm-10">
                     <div className="form-check">
                     <input className="form-check-input" type="radio"
-                        name={question._id} id="r3" value="True" onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
-                    <option className="form-check-option"value="True">
-                        True </option> </div>
+                        name={question._id} id="r3" value={question.options[0]}
+                       onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
+                    <label className="form-check-option" >
+                        {question.options[0]}</label> </div>
                     <div className="form-check">
                     <input className="form-check-input" type="radio"
-                        name={question._id} id="r4" value="False" onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
-                    <option className="form-check-option" value="False" >
-                        False </option> </div>
+                        name={question._id} id="r4" value= {question.options[1]} 
+                        onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
+                    <label className="form-check-label" >
+                    {question["options"][1]}</label> </div>
                 </div>
                 </fieldset>
-            </div>
-             )} */}
-             {question.questionType === "TF" && (
-                <div className="mb-3">
-                    <fieldset className="row mb-3">
-                    <div className="col-sm-10">
-                        <div className="form-check">
-                        <input
-                            className="form-check-input"
-                            type="radio"
-                            name={question._id}
-                            id="r3"
-                            value="True"
-                            onChange={(e) => handleAnswerChange(question._id, e.target.value)}
-                            checked={answers[question._id] === "True"}
-
-                        />
-                        <label className="form-check-label" htmlFor="r3">
-                            True
-                        </label>
-                        </div>
-                        <div className="form-check">
-                        <input
-                            className="form-check-input"
-                            type="radio"
-                            name={question._id}
-                            id="r4"
-                            value="False"
-                            onChange={(e) => handleAnswerChange(question._id, e.target.value)}
-                            checked={answers[question._id] === "False"}
-                        />
-                        <label className="form-check-label" htmlFor="r4">
-                            False
-                        </label>
-                        </div>
-                    </div>
-                    </fieldset>
-                </div>
-                )}
+               
+                
+            )}
+            
             </div>
         ))
       ) : (
