@@ -156,16 +156,16 @@ return (
                 <div className="col-sm-10">
                     <div className="form-check">
                     <input className="form-check-input" type="radio"
-                        name={question._id} id="r3" value={question.options[0]}
+                        name={question._id} id="r3" value="True"
                        onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
                     <label className="form-check-option" >
                         {question.options[0]}</label> </div>
                     <div className="form-check">
                     <input className="form-check-input" type="radio"
-                        name={question._id} id="r4" value= {question.options[1]} 
+                        name={question._id} id="r4" value= "False"
                         onChange={(e) => handleAnswerChange(question._id, e.target.value)}/>
                     <label className="form-check-label" >
-                    {question["options"][1]}</label> </div>
+                     {question["options"][1]}</label> </div>
                 </div>
                 </fieldset>
                

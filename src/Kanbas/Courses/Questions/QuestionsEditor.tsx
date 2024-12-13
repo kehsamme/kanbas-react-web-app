@@ -22,6 +22,7 @@ export default function QuestionEditor() {
 
       useEffect(() => {
         fetchQuestions();
+        console.error("in use effeect", question.options)
       }, [qid]);
    
     
@@ -62,13 +63,13 @@ export default function QuestionEditor() {
         options: string[];
         answers: string[]; // Changed to explicitly reflect it's an array of strings
     }>({
-        title: "",
+        title: "dummy_id",
         points: 0,
-        questionType: "True False",
+        questionType: "TF",
         number: `M${questions.length + 1}`,
         quiz: "dummy_id",
         question: "",
-        options: [],
+        options: ["True", "False"],
         answers: [],
     });
     const handleQuestionTypeChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
@@ -76,8 +77,8 @@ export default function QuestionEditor() {
         setQuestion({
             ...question,
             questionType: selectedType,
-            answers: selectedType === "Multiple Choice" ? [""] : [], // Initialize answers differently based on type
-            options: selectedType === "Multiple Choice" ? ["Option 1", "Option 2",  "Option 3"] : [], // Add placeholder options for multiple choice
+            answers: selectedType === "TF" ? [""] : [], // Initialize answers differently based on type
+            options: selectedType === "TF" ? ["True", "False"] : [], // Add placeholder options for multiple choice
         });
     };
     
@@ -220,19 +221,6 @@ export default function QuestionEditor() {
             <div className="mb-3">
                 <label htmlFor="wd-answer" className="form-label">Options</label>
 
-                {/* Render True/False options */}
-                {question.questionType === "TF" && (
-                    <select
-                        id="wd-answer"
-                        className="form-select"
-                        value={question.answers}
-                        onChange={(e) => setQuestion({ ...question, answers: [e.target.value] })
-                    }
-                    >
-                        <option value="True">True</option>
-                        <option value="False">False</option>
-                    </select>
-                )}
 
                 {/* Render Multiple Choice Options */}
                 {question.questionType === "MC" && (
@@ -318,6 +306,19 @@ export default function QuestionEditor() {
             </div>
             <div className="mb-3">
                 <label htmlFor="wd-answer" className="form-label">Answer</label>
+                  {/* Render True/False options */}
+                  {question.questionType === "TF" && (
+                    <select
+                        id="wd-answer"
+                        className="form-select"
+                        value={question.answers}
+                        onChange={(e) => setQuestion({ ...question, answers: [e.target.value] })
+                    }
+                    >
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                )}
 
                 {/* Render Multiple Choice Options */}
                 {question.questionType === "MC" && (
