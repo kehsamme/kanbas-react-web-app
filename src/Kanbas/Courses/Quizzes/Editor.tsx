@@ -148,6 +148,7 @@ export default function QuizEditor() {
         
         //console.log("New Assignment return from api call:", assignment); // Debug Redux update
         dispatch(addQuiz(quiz));
+        return quiz;
     };
 
     const findUsersForCourse = async () => {
@@ -175,7 +176,7 @@ export default function QuizEditor() {
             return;
           }
           const quizData = {
-            _id: qid || `${new Date().getTime()}`, // Generate a unique ID for new quizzes
+            _id: quiz._id,
             title: quiz.title,
             type: quiz.type,
             number: quiz.number,
@@ -231,8 +232,9 @@ export default function QuizEditor() {
         } else {
           // Else create a new assignment
           try {
+            let newQuiz;
             console.log("creating quiz");
-            createQuizForCourse(cid, quiz);
+            newQuiz = await createQuizForCourse(cid, quiz);
             if (!cid) return;
             console.log("creating scores");
             console.log("getting users in course");
@@ -242,7 +244,7 @@ export default function QuizEditor() {
             // Create a score for each user
             for (const user of users) {
               const newScore = {
-                quizId: quiz._id,
+                quizId: newQuiz._id,
                 userId: user._id,
                 attempts: 0,
                 score: 0,
